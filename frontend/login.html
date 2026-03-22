@@ -3,223 +3,147 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Interview Auth</title>
+<title>PREPTALK Login</title>
 
 <style>
 body {
     margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
 }
 
-/* Floating circles */
-.circle {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(0,255,255,0.1);
-    animation: float 6s infinite alternate;
-}
-.circle:nth-child(1){ width:100px;height:100px; top:10%; left:20%; }
-.circle:nth-child(2){ width:150px;height:150px; top:60%; left:70%; }
-.circle:nth-child(3){ width:80px;height:80px; top:40%; left:10%; }
-
-@keyframes float {
-    from { transform: translateY(0px); }
-    to { transform: translateY(-40px); }
-}
-
-/* Card */
 .container {
+    background: #ffffff;
+    padding: 40px;
     width: 350px;
-    padding: 30px;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(15px);
-    box-shadow: 0 0 25px rgba(0,255,255,0.5);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     text-align: center;
-    color: white;
-    z-index: 1;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #4f46e5;
+    margin-bottom: 10px;
 }
 
 h2 {
-    color: #00ffff;
-    text-shadow: 0 0 10px #00ffff;
+    margin: 10px 0;
 }
 
-/* Inputs */
-.input-box {
-    margin-top: 15px;
+p {
+    color: #6b7280;
+    font-size: 14px;
 }
 
 input {
     width: 100%;
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-    background: rgba(255,255,255,0.2);
-    color: white;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+input:focus {
+    border-color: #6366f1;
     outline: none;
 }
 
-/* Button */
 button {
-    margin-top: 20px;
     width: 100%;
-    padding: 10px;
-    border-radius: 25px;
+    padding: 12px;
+    background: linear-gradient(to right, #6366f1, #8b5cf6);
     border: none;
-    background: #00ffff;
-    color: black;
-    font-weight: bold;
+    border-radius: 8px;
+    color: white;
     cursor: pointer;
 }
 
 button:hover {
-    background: #00bcd4;
+    opacity: 0.9;
 }
 
+.divider {
+    margin: 20px 0;
+    color: #9ca3af;
+}
+
+/* Google Button */
+.google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    color: #111;
+}
+
+.google-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+/* Message */
 .message {
     margin-top: 10px;
+    color: green;
     font-size: 14px;
-}
-
-.link {
-    margin-top: 15px;
-    cursor: pointer;
-    color: #00ffff;
-    font-size: 14px;
-}
-
-.hint {
-    font-size: 12px;
-    color: #ccc;
 }
 </style>
 </head>
 
 <body>
 
-<div class="circle"></div>
-<div class="circle"></div>
-<div class="circle"></div>
-
 <div class="container">
+    <div class="logo">🎓 PREPTALK</div>
 
-    <!-- LOGIN FORM -->
-    <div id="loginForm">
-        <h2>🤖 Login</h2>
+    <h2>Welcome back</h2>
+    <p>Sign in to continue your practice</p>
 
-        <div class="input-box">
-            <input type="email" id="loginEmail" placeholder="Email">
-        </div>
+    <form id="loginForm">
+        <input type="email" id="email" placeholder="you@example.com" required>
+        <input type="password" id="password" placeholder="Password" required>
 
-        <div class="input-box">
-            <input type="password" id="loginPass" placeholder="Password">
-        </div>
+        <button type="submit">Sign In</button>
+    </form>
 
-        <button onclick="login()">Login</button>
+    <div class="divider">OR</div>
 
-        <div class="message" id="loginMsg"></div>
+    <!-- Google Button -->
+    <button class="google-btn" onclick="googleLogin()">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/IOS_Google_icon.png" alt="Google">
+        Continue with Google
+    </button>
 
-        <div class="link" onclick="showRegister()">New user? Register</div>
-    </div>
-
-    <!-- REGISTER FORM -->
-    <div id="registerForm" style="display:none;">
-        <h2>📝 Register</h2>
-
-        <div class="input-box">
-            <input type="email" id="regEmail" placeholder="Email">
-        </div>
-
-        <div class="input-box">
-            <input type="password" id="regPass" placeholder="Password">
-        </div>
-
-        <p class="hint">
-            Password must be 8+ characters, include uppercase & symbol
-        </p>
-
-        <button onclick="register()">Register</button>
-
-        <div class="message" id="regMsg"></div>
-
-        <div class="link" onclick="showLogin()">Already have account? Login</div>
-    </div>
-
+    <div id="msg" class="message"></div>
 </div>
 
 <script>
-// Switch Forms
-function showRegister() {
-    document.getElementById("loginForm").style.display = "none";
-    document.getElementById("registerForm").style.display = "block";
-}
+// Form Validation
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+    e.preventDefault();
 
-function showLogin() {
-    document.getElementById("registerForm").style.display = "none";
-    document.getElementById("loginForm").style.display = "block";
-}
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
 
-// Strong password regex
-let strongPassword = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-
-// REGISTER
-function register() {
-    let email = document.getElementById("regEmail").value;
-    let pass = document.getElementById("regPass").value;
-    let msg = document.getElementById("regMsg");
-
-    if(email === "" || pass === "") {
-        msg.innerHTML = "⚠️ Fill all fields";
-        msg.style.color = "yellow";
+    if(password.length < 6){
+        alert("Password must be at least 6 characters");
+        return;
     }
-    else if(!strongPassword.test(pass)) {
-        msg.innerHTML = "⚠️ Weak password!";
-        msg.style.color = "orange";
-    }
-    else {
-        // Save in browser (localStorage)
-        localStorage.setItem("email", email);
-        localStorage.setItem("password", pass);
 
-        msg.innerHTML = "✅ Registered Successfully!";
-        msg.style.color = "lightgreen";
+    document.getElementById("msg").innerText = "Login Successful ✅";
+});
 
-        setTimeout(showLogin, 1000);
-    }
-}
-
-// LOGIN
-function login() {
-    let email = document.getElementById("loginEmail").value;
-    let pass = document.getElementById("loginPass").value;
-    let msg = document.getElementById("loginMsg");
-
-    let savedEmail = localStorage.getItem("email");
-    let savedPass = localStorage.getItem("password");
-
-    if(email === "" || pass === "") {
-        msg.innerHTML = "⚠️ Fill all fields";
-        msg.style.color = "yellow";
-    }
-    else if(email === savedEmail && pass === savedPass) {
-        msg.innerHTML = "✅ Login Successful!";
-        msg.style.color = "lightgreen";
-
-        setTimeout(() => {
-            window.location.href = "resume_upload.html";
-        }, 1000);
-    }
-    else {
-        msg.innerHTML = "❌ Invalid Email or Password";
-        msg.style.color = "red";
-    }
+// Google Button Action
+function googleLogin() {
+    window.location.href = "https://accounts.google.com/";
 }
 </script>
 
