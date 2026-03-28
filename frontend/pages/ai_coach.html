@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PrepTalk - AI Coach</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    background: #f7f8fc;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background: #fff;
+    border-right: 1px solid #e5e7eb;
+    padding: 20px;
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.menu-section {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #9ca3af;
+    text-transform: uppercase;
+}
+
+.menu-item {
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 5px;
+    cursor: pointer;
+    color: #374151;
+}
+
+.menu-item:hover {
+    background: #f3f4f6;
+}
+
+.menu-item.active {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
+/* Main */
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.header {
+    height: 70px;
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bot-icon {
+    background: #4f46e5;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.header-title {
+    font-weight: 600;
+}
+
+.header-sub {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.voice {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* Content */
+.content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.center-box {
+    max-width: 600px;
+}
+
+.sparkle {
+    font-size: 30px;
+    background: #4f46e5;
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+h2 {
+    margin-bottom: 10px;
+}
+
+.subtext {
+    color: #6b7280;
+    margin-bottom: 20px;
+}
+
+/* Suggestions */
+.suggestions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.suggestions button {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    cursor: pointer;
+}
+
+.suggestions button:hover {
+    background: #f3f4f6;
+}
+
+/* Input */
+.input-box {
+    border-top: 1px solid #e5e7eb;
+    background: #fff;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-box input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #e5e7eb;
+    outline: none;
+}
+
+.send-btn {
+    background: #6366f1;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="logo">PrepTalk</div>
+
+    <div class="menu-item">Home</div>
+    <div class="menu-item">Dashboard</div>
+    <div class="menu-item">Upload Resume</div>
+    <div class="menu-item">ATS Checker</div>
+    <div class="menu-item">Select Role</div>
+
+    <div class="menu-section">Interview</div>
+    <div class="menu-item">Text Interview</div>
+    <div class="menu-item">Voice Interview</div>
+    <div class="menu-item">Video Interview</div>
+    <div class="menu-item active">AI Coach</div>
+
+    <div class="menu-section">Communication</div>
+    <div class="menu-item">Self Introduction</div>
+
+    <div class="menu-section">Practice</div>
+    <div class="menu-item">Aptitude</div>
+    <div class="menu-item">Company PYQs</div>
+
+    <div class="menu-section">Learning</div>
+    <div class="menu-item">Learning Hub</div>
+    <div class="menu-item">AI Roadmap</div>
+    <div class="menu-item">Training Plan</div>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div class="bot-icon">🤖</div>
+            <div>
+                <div class="header-title">AI Coach</div>
+                <div class="header-sub">Your personal interview preparation assistant</div>
+            </div>
+        </div>
+        <div class="voice">🔈 Voice Off</div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <div class="center-box">
+            <div class="sparkle">✨</div>
+            <h2>How can I help you prepare?</h2>
+            <div class="subtext">
+                Ask me anything about interview preparation — techniques, tips,
+                practice questions, or career advice.
+            </div>
+
+            <div class="suggestions">
+                <button onclick="fillInput(this)">How should I prepare for a technical interview?</button>
+                <button onclick="fillInput(this)">What is the STAR method?</button>
+                <button onclick="fillInput(this)">Tips for system design interviews</button>
+                <button onclick="fillInput(this)">How to answer 'Tell me about yourself'</button>
+                <button onclick="fillInput(this)">How do I negotiate salary?</button>
+                <button onclick="fillInput(this)">Common behavioral interview mistakes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Input -->
+    <div class="input-box">
+        <input type="text" id="userInput" placeholder="Ask about interview techniques, tips, or practice..." />
+        <button class="send-btn" onclick="sendMessage()">➤</button>
+    </div>
+
+</div>
+
+<script>
+function fillInput(btn) {
+    document.getElementById("userInput").value = btn.innerText;
+}
+
+function sendMessage() {
+    const input = document.getElementById("userInput");
+    if (input.value.trim() !== "") {
+        alert("You asked: " + input.value);
+        input.value = "";
+    }
+}
+</script>
+
+</body>
+</html>
