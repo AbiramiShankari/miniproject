@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configure Interview</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f6f7fb;
+}
+
+.container {
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: #fff;
+  height: 100vh;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.logo {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.menu a {
+  display: block;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 8px;
+  color: #444;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.menu a.active,
+.menu a:hover {
+  background: #e8ebff;
+  color: #4a6cff;
+}
+
+.section {
+  margin: 15px 0 5px;
+  font-size: 12px;
+  color: #888;
+}
+
+/* Main */
+.main {
+  flex: 1;
+  padding: 40px;
+}
+
+/* Title */
+.title {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.title h1 {
+  font-size: 28px;
+}
+
+.title p {
+  color: #777;
+}
+
+/* Section */
+.section-box {
+  margin-bottom: 30px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.step {
+  width: 25px;
+  height: 25px;
+  background: #4a6cff;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 15px;
+}
+
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.card.active {
+  border: 2px solid #4a6cff;
+  background: #eef1ff;
+}
+
+/* Interview type */
+.type-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.type-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.type-card.active {
+  border: 2px solid #4a6cff;
+  background: #eef1ff;
+}
+
+/* Difficulty */
+.levels {
+  display: flex;
+  gap: 10px;
+}
+
+.level {
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  border: 1px solid #ddd;
+}
+
+.level.active {
+  background: linear-gradient(90deg, #4a6cff, #7a4fff);
+  color: white;
+  border: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2 class="logo">PREPTALK</h2>
+
+    <div class="menu">
+      <p class="section">MAIN</p>
+      <a>Home</a>
+      <a>Dashboard</a>
+      <a>Upload Resume</a>
+      <a>ATS Checker</a>
+      <a class="active">Select Role</a>
+
+      <p class="section">INTERVIEW</p>
+      <a>Text Interview</a>
+      <a>Voice Interview</a>
+      <a>Video Interview</a>
+      <a>AI Coach</a>
+
+      <p class="section">PRACTICE</p>
+      <a>Aptitude</a>
+      <a>Company PYQs</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Title -->
+    <div class="title">
+      <h1>Configure Your Interview</h1>
+      <p>Choose role, interview type, and difficulty to begin.</p>
+    </div>
+
+    <!-- Target Role -->
+    <div class="section-box">
+      <div class="section-header">
+        <div class="step">1</div>
+        <h3>Target Role</h3>
+      </div>
+
+      <div class="grid" id="roles">
+        <div class="card">Software Engineer</div>
+        <div class="card">Full Stack Developer</div>
+        <div class="card">Frontend Developer</div>
+        <div class="card">Backend Developer</div>
+        <div class="card">Data Scientist</div>
+        <div class="card">ML Engineer</div>
+        <div class="card">Product Manager</div>
+        <div class="card">UI/UX Designer</div>
+        <div class="card">Business Analyst</div>
+        <div class="card">DevOps Engineer</div>
+      </div>
+    </div>
+
+    <!-- Interview Type -->
+    <div class="section-box">
+      <div class="section-header">
+        <div class="step">2</div>
+        <h3>Interview Type</h3>
+      </div>
+
+      <div class="type-grid" id="types">
+        <div class="type-card active">
+          <h4>Technical</h4>
+          <p>Data structures, algorithms</p>
+        </div>
+        <div class="type-card">
+          <h4>Behavioral</h4>
+          <p>STAR method, teamwork</p>
+        </div>
+        <div class="type-card">
+          <h4>System Design</h4>
+          <p>Architecture, scalability</p>
+        </div>
+        <div class="type-card">
+          <h4>HR Round</h4>
+          <p>Culture fit, salary</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Difficulty -->
+    <div class="section-box">
+      <div class="section-header">
+        <div class="step">3</div>
+        <h3>Difficulty Level</h3>
+      </div>
+
+      <div class="levels" id="levels">
+        <div class="level">Beginner</div>
+        <div class="level active">Intermediate</div>
+        <div class="level">Advanced</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// Sidebar active toggle
+document.querySelectorAll(".menu a").forEach(item => {
+  item.addEventListener("click", () => {
+    document.querySelectorAll(".menu a").forEach(el => el.classList.remove("active"));
+    item.classList.add("active");
+  });
+});
+
+// Role selection
+document.querySelectorAll("#roles .card").forEach(card => {
+  card.addEventListener("click", () => {
+    document.querySelectorAll("#roles .card").forEach(c => c.classList.remove("active"));
+    card.classList.add("active");
+  });
+});
+
+// Interview type selection
+document.querySelectorAll("#types .type-card").forEach(card => {
+  card.addEventListener("click", () => {
+    document.querySelectorAll("#types .type-card").forEach(c => c.classList.remove("active"));
+    card.classList.add("active");
+  });
+});
+
+// Difficulty selection
+document.querySelectorAll("#levels .level").forEach(level => {
+  level.addEventListener("click", () => {
+    document.querySelectorAll("#levels .level").forEach(l => l.classList.remove("active"));
+    level.classList.add("active");
+  });
+});
+</script>
+
+</body>
+</html>
