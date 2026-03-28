@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Company PYQ Bank</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f5f6fa;
+}
+
+.container {
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: #fff;
+  height: 100vh;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.logo {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.menu a {
+  display: block;
+  padding: 10px;
+  border-radius: 8px;
+  color: #444;
+  text-decoration: none;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.menu a.active,
+.menu a:hover {
+  background: #e6e9ff;
+  color: #4a6cff;
+}
+
+.section {
+  margin: 15px 0 5px;
+  font-size: 12px;
+  color: #888;
+}
+
+/* Main */
+.main {
+  flex: 1;
+  padding: 30px;
+}
+
+/* Title */
+.title h1 {
+  margin-bottom: 5px;
+}
+
+.title p {
+  color: #777;
+  margin-bottom: 20px;
+}
+
+/* Search */
+.search-box {
+  display: flex;
+  background: #fff;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.search-box input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px;
+}
+
+.search-box button {
+  background: #7a4fff;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 8px 15px;
+  background: #fff;
+  border-radius: 20px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+}
+
+.tab.active {
+  background: #e6e9ff;
+  color: #4a6cff;
+}
+
+/* Cards */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  transition: 0.3s;
+  cursor: pointer;
+  border: 1px solid #eee;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.icon {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.card h3 {
+  margin-bottom: 5px;
+}
+
+.card p {
+  font-size: 13px;
+  color: #777;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2 class="logo">PREPTALK</h2>
+
+    <div class="menu">
+      <a>Text Interview</a>
+      <a>Voice Interview</a>
+      <a>Video Interview</a>
+      <a>AI Coach</a>
+
+      <p class="section">COMMUNICATION</p>
+      <a>Self Introduction</a>
+
+      <p class="section">PRACTICE</p>
+      <a>Aptitude</a>
+      <a class="active">Company PYQs</a>
+
+      <p class="section">LEARNING</p>
+      <a>Learning Hub</a>
+      <a>AI Roadmap</a>
+      <a>Training Plan</a>
+      <a>Python</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <div class="title">
+      <h1>Company PYQ Bank</h1>
+      <p>Practice previous year questions from top companies — scraped from real sources with direct links</p>
+    </div>
+
+    <!-- Search -->
+    <div class="search-box">
+      <input type="text" id="search" placeholder="Search any company...">
+      <button onclick="searchCompany()">Go</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this)">Indian Companies</div>
+      <div class="tab" onclick="switchTab(this)">Global Companies</div>
+    </div>
+
+    <!-- Cards -->
+    <div class="grid" id="companyGrid">
+
+      <div class="card" data-name="tcs">
+        <div class="icon">🏢</div>
+        <h3>TCS</h3>
+        <p>India's largest IT services company</p>
+      </div>
+
+      <div class="card" data-name="infosys">
+        <div class="icon">🔷</div>
+        <h3>Infosys</h3>
+        <p>Global leader in digital services</p>
+      </div>
+
+      <div class="card" data-name="wipro">
+        <div class="icon">🌸</div>
+        <h3>Wipro</h3>
+        <p>Leading global IT consulting company</p>
+      </div>
+
+      <div class="card" data-name="hcl">
+        <div class="icon">⚡</div>
+        <h3>HCL Technologies</h3>
+        <p>Technology and IT enterprise</p>
+      </div>
+
+      <div class="card" data-name="tech mahindra">
+        <div class="icon">🔴</div>
+        <h3>Tech Mahindra</h3>
+        <p>Digital transformation specialist</p>
+      </div>
+
+      <div class="card" data-name="cognizant">
+        <div class="icon">🟦</div>
+        <h3>Cognizant</h3>
+        <p>Professional services & solutions</p>
+      </div>
+
+      <div class="card" data-name="accenture">
+        <div class="icon">▶️</div>
+        <h3>Accenture India</h3>
+        <p>Global professional services leader</p>
+      </div>
+
+      <div class="card" data-name="capgemini">
+        <div class="icon">🔵</div>
+        <h3>Capgemini India</h3>
+        <p>Consulting & technology services</p>
+      </div>
+
+      <div class="card" data-name="zoho">
+        <div class="icon">🟢</div>
+        <h3>Zoho</h3>
+        <p>SaaS products & cloud solutions</p>
+      </div>
+
+      <div class="card" data-name="freshworks">
+        <div class="icon">🟠</div>
+        <h3>Freshworks</h3>
+        <p>Modern SaaS company</p>
+      </div>
+
+      <div class="card" data-name="flipkart">
+        <div class="icon">🛒</div>
+        <h3>Flipkart</h3>
+        <p>India's largest e-commerce marketplace</p>
+      </div>
+
+      <div class="card" data-name="phonepe">
+        <div class="icon">💜</div>
+        <h3>PhonePe</h3>
+        <p>Digital payments & fintech leader</p>
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+// Sidebar active
+document.querySelectorAll(".menu a").forEach(item => {
+  item.addEventListener("click", () => {
+    document.querySelectorAll(".menu a").forEach(el => el.classList.remove("active"));
+    item.classList.add("active");
+  });
+});
+
+// Search
+function searchCompany() {
+  let input = document.getElementById("search").value.toLowerCase();
+  let cards = document.querySelectorAll(".card");
+
+  cards.forEach(card => {
+    let name = card.getAttribute("data-name");
+    card.style.display = name.includes(input) ? "block" : "none";
+  });
+}
+
+// Tabs
+function switchTab(el) {
+  document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+  el.classList.add("active");
+
+  alert("Switched to " + el.innerText);
+}
+</script>
+
+</body>
+</html>
