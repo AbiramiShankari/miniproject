@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session Comparison</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f5f6fa;
+}
+
+.container {
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: #fff;
+  height: 100vh;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.logo {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.menu a {
+  display: block;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 8px;
+  color: #444;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.menu a.active,
+.menu a:hover {
+  background: #e6e9ff;
+  color: #4a6cff;
+}
+
+.section {
+  margin: 15px 0 5px;
+  font-size: 12px;
+  color: #888;
+}
+
+/* Main */
+.main {
+  flex: 1;
+  padding: 30px 40px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title h1 {
+  margin-bottom: 5px;
+}
+
+.title p {
+  color: #777;
+}
+
+.btn {
+  background: linear-gradient(90deg, #4a6cff, #7a4fff);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}
+
+/* Card */
+.card {
+  margin-top: 30px;
+  background: #fff;
+  padding: 60px 20px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid #eee;
+}
+
+.icon {
+  font-size: 40px;
+  margin-bottom: 15px;
+}
+
+.card h3 {
+  margin-bottom: 10px;
+}
+
+.card p {
+  color: #777;
+  margin-bottom: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2 class="logo">PREPTALK</h2>
+
+    <div class="menu">
+      <a>Text Interview</a>
+      <a>Voice Interview</a>
+      <a>Video Interview</a>
+      <a>AI Coach</a>
+
+      <p class="section">COMMUNICATION</p>
+      <a>Self Introduction</a>
+
+      <p class="section">PRACTICE</p>
+      <a>Aptitude</a>
+      <a>Company PYQs</a>
+
+      <p class="section">LEARNING</p>
+      <a>Learning Hub</a>
+      <a>AI Roadmap</a>
+      <a>Training Plan</a>
+      <a>Python</a>
+
+      <p class="section">ANALYTICS</p>
+      <a>Feedback</a>
+      <a>History</a>
+      <a class="active">Compare</a>
+
+      <p class="section">HELP</p>
+      <a>Documentation</a>
+      <a>Settings</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="title">
+        <h1>Session Comparison</h1>
+        <p>Track how your scores improved across interviews</p>
+      </div>
+
+      <button class="btn" onclick="newInterview()">New Interview →</button>
+    </div>
+
+    <!-- Empty State -->
+    <div class="card">
+      <div class="icon">📊</div>
+      <h3>Need more data</h3>
+      <p>Complete at least 2 scored interviews to see comparisons.</p>
+      <button class="btn" onclick="startInterview()">Start Interview</button>
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+// Sidebar active toggle
+document.querySelectorAll(".menu a").forEach(item => {
+  item.addEventListener("click", () => {
+    document.querySelectorAll(".menu a").forEach(el => el.classList.remove("active"));
+    item.classList.add("active");
+  });
+});
+
+// Buttons
+function newInterview() {
+  alert("Redirecting to new interview setup...");
+}
+
+function startInterview() {
+  alert("Starting interview...");
+}
+</script>
+
+</body>
+</html>
