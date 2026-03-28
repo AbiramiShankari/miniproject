@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload Resume</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: #f5f7fb;
+    color: #1a1a1a;
+}
+
+.container {
+    width: 80%;
+    max-width: 900px;
+    margin: 50px auto;
+}
+
+h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.subtext {
+    color: #6b7280;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.upload-box {
+    border: 2px dashed #b6c4e0;
+    border-radius: 16px;
+    padding: 50px 20px;
+    text-align: center;
+    background-color: #ffffff;
+    cursor: pointer;
+}
+
+.upload-icon {
+    width: 70px;
+    height: 70px;
+    background: #eef2ff;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-icon::before {
+    content: "⬆";
+    font-size: 28px;
+    color: #4f46e5;
+}
+
+.upload-text {
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.upload-subtext {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.divider {
+    text-align: center;
+    margin: 25px 0;
+    color: #9ca3af;
+}
+
+textarea {
+    width: 100%;
+    height: 180px;
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+    padding: 15px;
+    font-size: 15px;
+    outline: none;
+    resize: none;
+}
+
+.btn {
+    margin-top: 25px;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #6d7dfc, #a78bfa);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn::before {
+    content: "✨";
+}
+
+.status {
+    margin-top: 15px;
+    font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Upload Resume</h1>
+    <div class="subtext">
+        Upload or paste your resume for AI-powered analysis, ATS scoring & self-intro curation.
+    </div>
+
+    <div class="upload-box" id="uploadBox">
+        <div class="upload-icon"></div>
+        <div class="upload-text">Drop your resume here or click to upload</div>
+        <div class="upload-subtext">TXT, MD formats • up to 10MB</div>
+        <input type="file" id="fileInput" accept=".txt,.md" hidden>
+    </div>
+
+    <div class="divider">— or paste your resume content below —</div>
+
+    <textarea id="resumeText" placeholder="Paste your resume text here...
+
+Include your skills, experience, projects, and education."></textarea>
+
+    <br>
+    <button class="btn" onclick="analyzeResume()">Analyze with AI</button>
+
+    <div class="status" id="status"></div>
+
+</div>
+
+<script>
+const uploadBox = document.getElementById("uploadBox");
+const fileInput = document.getElementById("fileInput");
+const status = document.getElementById("status");
+const textarea = document.getElementById("resumeText");
+
+/* Open file picker */
+uploadBox.addEventListener("click", () => {
+    fileInput.click();
+});
+
+/* Handle file selection */
+fileInput.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    processFile(file);
+});
+
+/* Drag & Drop */
+uploadBox.addEventListener("dragover", (e) => {
+    e.preventDefault();
+});
+
+uploadBox.addEventListener("drop", (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    processFile(file);
+});
+
+/* Process File */
+function processFile(file) {
+    if (!file) return;
+
+    const allowedTypes = ["text/plain", "text/markdown"];
+
+    if (!allowedTypes.includes(file.type)) {
+        status.innerText = "❌ Only TXT or MD files are supported";
+        return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+        status.innerText = "❌ File too large (Max 10MB)";
+        return;
+    }
+
+    status.innerText = "Uploading...";
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        const content = e.target.result;
+        textarea.value = content;
+        status.innerText = "✅ File uploaded successfully!";
+    };
+
+    reader.readAsText(file);
+}
+
+/* Improved AI Analysis */
+function analyzeResume() {
+    const text = textarea.value.toLowerCase();
+
+    if (!text.trim()) {
+        status.innerText = "❌ Please upload or paste resume";
+        return;
+    }
+
+    status.innerText = "Analyzing with AI...";
+
+    setTimeout(() => {
+        let score = 0;
+
+        const keywords = {
+            skills: ["skills", "technical skills", "core skills"],
+            experience: ["experience", "work experience", "internship"],
+            education: ["education", "qualification", "degree"],
+            projects: ["project", "projects"]
+        };
+
+        if (keywords.skills.some(k => text.includes(k))) score += 25;
+        if (keywords.experience.some(k => text.includes(k))) score += 25;
+        if (keywords.education.some(k => text.includes(k))) score += 25;
+        if (keywords.projects.some(k => text.includes(k))) score += 25;
+
+        if (score >= 75) {
+            status.innerText = "✅ Resume looks good! ATS Score: " + score + "%";
+        } else if (score >= 40) {
+            status.innerText = "⚠️ Resume is average. Improve sections. Score: " + score + "%";
+        } else {
+            status.innerText = "❌ Resume incomplete. Add more sections. Score: " + score + "%";
+        }
+    }, 1500);
+}
+</script>
+
+</body>
+</html>
