@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Profile Settings</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    background:#e5e7eb;
+    padding:30px;
+}
+
+/* HEADER */
+.header{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.header span{
+    font-size:20px;
+    cursor:pointer;
+}
+
+.header h2{
+    font-size:22px;
+}
+
+/* CARD */
+.card{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* TITLE */
+.card h3{
+    margin-bottom:15px;
+}
+
+/* FORM */
+.form-group{
+    margin-bottom:15px;
+}
+
+label{
+    font-size:14px;
+    display:block;
+    margin-bottom:5px;
+}
+
+input, textarea, select{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ddd;
+    background:#f3f4f6;
+}
+
+textarea{
+    resize:none;
+    height:80px;
+}
+
+/* AVATAR */
+.avatar-row{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:15px;
+}
+
+.avatar{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    background:#dbeafe;
+}
+
+/* TAGS */
+.tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:10px;
+}
+
+.tag{
+    padding:6px 12px;
+    background:#f3f4f6;
+    border-radius:20px;
+    font-size:13px;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+/* ACTIVE TAG */
+.tag.active{
+    background:#4c5cff;
+    color:white;
+}
+
+/* BUTTON */
+.save-btn{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(90deg,#4c5cff,#8a5cff);
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <span onclick="window.location.href='index.html'">←</span>
+    <h2>Profile Settings</h2>
+</div>
+
+<!-- PERSONAL INFO -->
+<div class="card">
+    <h3>Personal Info</h3>
+
+    <div class="avatar-row">
+        <div class="avatar"></div>
+
+        <div style="flex:1;">
+            <label>Avatar URL</label>
+            <input type="text" placeholder="https://example.com/avatar.jpg">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Display Name</label>
+        <input type="text" placeholder="Name">
+    </div>
+
+    <div class="form-group">
+        <label>Bio</label>
+        <textarea placeholder="Tell us about yourself..."></textarea>
+    </div>
+</div>
+
+<!-- INTERVIEW PREF -->
+<div class="card">
+    <h3>Interview Preferences</h3>
+
+    <div class="form-group">
+        <label>Target Role</label>
+        <select>
+            <option>Frontend Developer</option>
+            <option>Backend Developer</option>
+            <option>Software Engineer</option>
+            <option>Full Stack Developer</option>
+            <option>Data Scientist</option>
+            <option>Product Manager</option>
+            <option>DevOps Engineer</option>
+            <option>Mobile Developer</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Difficulty Level</label>
+        <select>
+            <option>Beginner</option>
+            <option selected>Intermediate</option>
+            <option>Advanced</option>
+            <option>Expert</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Preferred Companies</label>
+
+        <div class="tags" id="companyTags">
+            <div class="tag">Google</div>
+            <div class="tag">Amazon</div>
+            <div class="tag">Microsoft</div>
+            <div class="tag">Meta</div>
+            <div class="tag">Apple</div>
+            <div class="tag">Netflix</div>
+            <div class="tag">Tesla</div>
+            <div class="tag">Uber</div>
+            <div class="tag">Airbnb</div>
+            <div class="tag">Stripe</div>
+        </div>
+    </div>
+</div>
+
+<!-- SAVE BUTTON -->
+<button class="save-btn">💾 Save Settings</button>
+
+<!-- SCRIPT -->
+<script>
+let selectedCompanies = [];
+
+const tags = document.querySelectorAll("#companyTags .tag");
+
+tags.forEach(tag => {
+    tag.addEventListener("click", () => {
+
+        tag.classList.toggle("active");
+
+        const company = tag.innerText;
+
+        if(selectedCompanies.includes(company)){
+            selectedCompanies = selectedCompanies.filter(c => c !== company);
+        } else {
+            selectedCompanies.push(company);
+        }
+
+        console.log("Selected Companies:", selectedCompanies);
+    });
+});
+</script>
+
+</body>
+</html>
