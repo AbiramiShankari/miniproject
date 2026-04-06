@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login - PREPTALK</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body{
+    background:#eef1f7;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* CARD */
+.container{
+    background:white;
+    width:380px;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+    text-align:center;
+}
+
+/* LOGO */
+.logo{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.logo-box{
+    width:40px;
+    height:40px;
+    border-radius:10px;
+    background:linear-gradient(135deg,#4c5cff,#8a5cff);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    font-size:20px;
+}
+
+.logo h2{
+    font-size:20px;
+    font-weight:700;
+}
+
+/* TEXT */
+h1{
+    font-size:22px;
+    margin-top:10px;
+}
+
+.sub{
+    color:#666;
+    margin:5px 0 20px;
+    font-size:14px;
+}
+
+/* INPUTS */
+.input-group{
+    text-align:left;
+    margin-bottom:15px;
+}
+
+.input-group label{
+    font-size:14px;
+    margin-bottom:5px;
+    display:block;
+}
+
+.input-group input{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ddd;
+    background:#f5f6fa;
+}
+
+/* BUTTON */
+.btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(90deg,#4c5cff,#8a5cff);
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+/* DIVIDER */
+.divider{
+    margin:20px 0;
+    display:flex;
+    align-items:center;
+    color:#888;
+    font-size:14px;
+}
+
+.divider::before,
+.divider::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:#ddd;
+}
+
+.divider span{
+    margin:0 10px;
+}
+
+/* GOOGLE BUTTON */
+.google-btn{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ddd;
+    background:#f5f6fa;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+}
+
+.google-btn img{
+    width:18px;
+}
+
+/* LINKS */
+.signup{
+    margin-top:15px;
+    font-size:14px;
+    color:#555;
+}
+
+.signup a{
+    color:#4c5cff;
+    text-decoration:none;
+}
+
+.signup a:hover{
+    text-decoration:underline;
+}
+
+.back{
+    margin-top:10px;
+    font-size:14px;
+}
+
+.back a{
+    text-decoration:none;
+    color:#888;
+}
+
+.back a:hover{
+    color:#4c5cff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LOGO -->
+    <div class="logo">
+        <div class="logo-box">★</div>
+        <h2>PREPTALK</h2>
+    </div>
+
+    <h1>Welcome back</h1>
+    <p class="sub">Sign in to continue your practice</p>
+
+    <!-- EMAIL -->
+    <div class="input-group">
+        <label>Email</label>
+        <input type="email" placeholder="you@example.com">
+    </div>
+
+    <!-- PASSWORD -->
+    <div class="input-group">
+        <label>Password</label>
+        <input type="password" placeholder="••••••••">
+    </div>
+
+    <!-- SIGN IN BUTTON -->
+    <button class="btn">Sign In</button>
+
+    <!-- DIVIDER -->
+    <div class="divider"><span>or</span></div>
+
+    <!-- GOOGLE BUTTON -->
+    <div class="google-btn">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg">
+        Continue with Google
+    </div>
+
+    <!-- SIGNUP -->
+    <div class="signup">
+        Don't have an account? <a href="signup.html">Sign up</a>
+    </div>
+
+    <!-- BACK -->
+    <div class="back">
+        <a href="index.html">← Back to home</a>
+    </div>
+
+</div>
+
+</body>
+</html>
