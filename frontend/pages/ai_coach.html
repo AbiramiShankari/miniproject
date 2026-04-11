@@ -1,276 +1,457 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>PrepTalk - AI Coach</title>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrepTalk – AI Coach</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Segoe UI", sans-serif;
-}
+:root{--primary:#4f46e5;--accent:#818cf8;--purple:#7c3aed;--success:#10b981;--warn:#f59e0b;
+  --bg:#0f172a;--surface:#1e293b;--card:#253047;--text:#f1f5f9;--muted:#94a3b8;--border:#334155;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+.pt-main{flex:1;display:flex;flex-direction:column;overflow:hidden;height:100vh;}
 
-body {
-    display: flex;
-    height: 100vh;
-    background: #f7f8fc;
-}
+.btn{padding:.65rem 1.25rem;border:none;border-radius:10px;font-weight:700;font-size:.85rem;
+  cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:.4rem;text-decoration:none;}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--purple));color:#fff;}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(79,70,229,.35);}
+.btn-ghost{background:rgba(255,255,255,.07);color:var(--text);border:1px solid var(--border);}
+.btn-ghost:hover{background:rgba(255,255,255,.12);}
+.btn-sm{padding:.5rem .9rem;font-size:.78rem;}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
 
-/* Sidebar */
-.sidebar {
-    width: 240px;
-    background: #fff;
-    border-right: 1px solid #e5e7eb;
-    padding: 20px;
-}
+/* ═══ Layout: sidebar + chat ════════════════════════════ */
+.coach-layout{display:flex;flex:1;gap:0;overflow:hidden;height:100%;}
 
-.logo {
-    font-weight: bold;
-    font-size: 18px;
-    margin-bottom: 20px;
-}
+/* Tool sidebar */
+.tool-sidebar{width:270px;background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
+.ts-header{padding:1.25rem 1rem 1rem;border-bottom:1px solid var(--border);}
+.ts-header h2{font-size:1rem;font-weight:800;margin-bottom:.2rem;}
+.ts-header p{font-size:.75rem;color:var(--muted);}
 
-.menu-section {
-    margin-top: 20px;
-    font-size: 12px;
-    color: #9ca3af;
-    text-transform: uppercase;
-}
+.ts-section{padding:.75rem 1rem .25rem;font-size:.65rem;font-weight:700;color:#475569;
+  letter-spacing:1.2px;text-transform:uppercase;}
 
-.menu-item {
-    padding: 10px;
-    border-radius: 8px;
-    margin-top: 5px;
-    cursor: pointer;
-    color: #374151;
-}
+.tool-btn{display:flex;align-items:center;gap:.6rem;padding:.65rem 1rem;cursor:pointer;
+  border-radius:8px;margin:.1rem .5rem;transition:all .15s;text-decoration:none;}
+.tool-btn:hover{background:rgba(255,255,255,.05);}
+.tool-btn.active{background:rgba(129,140,248,.12);color:var(--accent);}
+.tool-btn .ti{font-size:1.1rem;width:28px;text-align:center;flex-shrink:0;}
+.tool-btn .tn{font-size:.82rem;font-weight:600;color:var(--text);}
+.tool-btn.active .tn{color:var(--accent);}
+.tool-btn .td{font-size:.7rem;color:var(--muted);line-height:1.3;margin-top:.05rem;}
 
-.menu-item:hover {
-    background: #f3f4f6;
-}
+/* Suggested prompts (in sidebar) */
+.prompt-chips{padding:.5rem 1rem .75rem;}
+.chip{display:block;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;
+  padding:.55rem .8rem;font-size:.78rem;color:var(--muted);cursor:pointer;margin-bottom:.4rem;
+  line-height:1.35;transition:all .15s;}
+.chip:hover{border-color:var(--accent);color:var(--text);background:rgba(129,140,248,.08);}
 
-.menu-item.active {
-    background: #e0e7ff;
-    color: #4338ca;
-}
+/* Role select strip */
+.role-strip{padding:.75rem 1rem;border-top:1px solid var(--border);margin-top:auto;}
+.role-strip label{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.8px;display:block;margin-bottom:.4rem;}
+.role-strip select{width:100%;padding:.6rem .8rem;background:var(--card);border:1px solid var(--border);
+  border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;font-size:.82rem;outline:none;}
 
-/* Main */
-.main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
+/* ═══ Chat panel ════════════════════════════════════════ */
+.chat-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;}
 
-/* Header */
-.header {
-    height: 70px;
-    background: #fff;
-    border-bottom: 1px solid #e5e7eb;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-}
+.chat-topbar{padding:1rem 1.5rem;border-bottom:1px solid var(--border);background:var(--surface);
+  display:flex;align-items:center;gap:.75rem;}
+.ai-orb{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--purple));
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;position:relative;}
+.ai-orb.thinking::after{content:"";position:absolute;inset:-3px;border-radius:50%;
+  border:2px solid var(--accent);animation:pring 1s ease infinite;}
+@keyframes pring{0%{opacity:1}100%{opacity:0;transform:scale(1.5)}}
+.tb-info h3{font-size:.92rem;font-weight:700;}
+.tb-info p{font-size:.72rem;color:var(--muted);}
+.tb-right{margin-left:auto;display:flex;gap:.5rem;}
 
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+/* Messages */
+.messages{flex:1;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:.85rem;}
+.messages::-webkit-scrollbar{width:4px;}
+.messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
 
-.bot-icon {
-    background: #4f46e5;
-    color: white;
-    padding: 10px;
-    border-radius: 10px;
-}
+.msg{max-width:78%;animation:fadeUp .25s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.msg.user{align-self:flex-end;}
+.msg.ai  {align-self:flex-start;}
+.msg-bubble{padding:.85rem 1.1rem;border-radius:14px;font-size:.9rem;line-height:1.55;}
+.msg.user .msg-bubble{background:linear-gradient(135deg,var(--primary),var(--purple));color:#fff;border-bottom-right-radius:4px;}
+.msg.ai   .msg-bubble{background:var(--surface);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px;}
+.msg.ai   .msg-bubble b{color:var(--accent);}
+.msg-bubble ul{padding-left:1.2rem;margin:.35rem 0;}
+.msg-bubble li{margin:.2rem 0;}
+.msg-meta{font-size:.65rem;color:var(--muted);margin-top:.25rem;padding:0 .25rem;}
+.msg.user .msg-meta{text-align:right;}
 
-.header-title {
-    font-weight: 600;
-}
+/* Typing indicator */
+.typing-dots span{display:inline-block;width:6px;height:6px;margin:0 2px;border-radius:50%;
+  background:var(--accent);animation:tdot 1s infinite;}
+.typing-dots span:nth-child(2){animation-delay:.2s;}
+.typing-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes tdot{0%,80%,100%{transform:scale(0.8);opacity:.4}40%{transform:scale(1.2);opacity:1}}
 
-.header-sub {
-    font-size: 12px;
-    color: #6b7280;
-}
+/* Input area */
+.input-area{border-top:1px solid var(--border);background:var(--surface);padding:1rem 1.25rem;}
+.input-row{display:flex;gap:.5rem;align-items:flex-end;}
+.input-wrap{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;
+  display:flex;align-items:flex-end;gap:.4rem;padding:.6rem .9rem;}
+.input-wrap:focus-within{border-color:var(--accent);}
+#chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);
+  font-family:'Inter',sans-serif;font-size:.9rem;resize:none;max-height:120px;
+  overflow-y:auto;line-height:1.5;}
+#chat-input::placeholder{color:#475569;}
+.inp-actions{display:flex;gap:.35rem;}
+#voice-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--muted);
+  transition:color .15s;}
+#voice-btn:hover{color:var(--accent);}
+#voice-btn.listening{color:#ef4444;animation:blink .8s infinite;}
+@keyframes blink{50%{opacity:.4}}
+.send-btn{width:40px;height:40px;border:none;border-radius:10px;cursor:pointer;
+  background:linear-gradient(135deg,var(--primary),var(--purple));color:#fff;font-size:1rem;
+  flex-shrink:0;transition:all .2s;}
+.send-btn:hover{transform:scale(1.05);}
+.send-btn:disabled{opacity:.4;transform:none;}
 
-.voice {
-    font-size: 14px;
-    color: #6b7280;
-}
+/* Quick action cards (shown at start) */
+.quick-cards{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;padding:1rem;}
+.qc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.9rem;
+  cursor:pointer;transition:all .2s;}
+.qc:hover{border-color:var(--accent);transform:translateY(-1px);}
+.qc .qi{font-size:1.3rem;margin-bottom:.35rem;}
+.qc .qt{font-size:.82rem;font-weight:700;}
+.qc .qs{font-size:.73rem;color:var(--muted);margin-top:.1rem;}
 
-/* Content */
-.content {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 20px;
-}
-
-.center-box {
-    max-width: 600px;
-}
-
-.sparkle {
-    font-size: 30px;
-    background: #4f46e5;
-    color: white;
-    padding: 12px;
-    border-radius: 12px;
-    display: inline-block;
-    margin-bottom: 15px;
-}
-
-h2 {
-    margin-bottom: 10px;
-}
-
-.subtext {
-    color: #6b7280;
-    margin-bottom: 20px;
-}
-
-/* Suggestions */
-.suggestions {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
-
-.suggestions button {
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #e5e7eb;
-    background: #fff;
-    cursor: pointer;
-}
-
-.suggestions button:hover {
-    background: #f3f4f6;
-}
-
-/* Input */
-.input-box {
-    border-top: 1px solid #e5e7eb;
-    background: #fff;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.input-box input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 20px;
-    border: 1px solid #e5e7eb;
-    outline: none;
-}
-
-.send-btn {
-    background: #6366f1;
-    border: none;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 10px;
-    cursor: pointer;
-}
+@media(max-width:700px){.tool-sidebar{display:none;}.quick-cards{grid-template-columns:1fr;}}
 </style>
 </head>
-
 <body>
+<script src="/static/js/nav.js"></script>
+<div class="pt-main">
+<div class="coach-layout">
 
-<!-- Sidebar -->
-<div class="sidebar">
-    <div class="logo">PrepTalk</div>
-
-    <div class="menu-item">Home</div>
-    <div class="menu-item">Dashboard</div>
-    <div class="menu-item">Upload Resume</div>
-    <div class="menu-item">ATS Checker</div>
-    <div class="menu-item">Select Role</div>
-
-    <div class="menu-section">Interview</div>
-    <div class="menu-item">Text Interview</div>
-    <div class="menu-item">Voice Interview</div>
-    <div class="menu-item">Video Interview</div>
-    <div class="menu-item active">AI Coach</div>
-
-    <div class="menu-section">Communication</div>
-    <div class="menu-item">Self Introduction</div>
-
-    <div class="menu-section">Practice</div>
-    <div class="menu-item">Aptitude</div>
-    <div class="menu-item">Company PYQs</div>
-
-    <div class="menu-section">Learning</div>
-    <div class="menu-item">Learning Hub</div>
-    <div class="menu-item">AI Roadmap</div>
-    <div class="menu-item">Training Plan</div>
-</div>
-
-<!-- Main -->
-<div class="main">
-
-    <!-- Header -->
-    <div class="header">
-        <div class="header-left">
-            <div class="bot-icon">🤖</div>
-            <div>
-                <div class="header-title">AI Coach</div>
-                <div class="header-sub">Your personal interview preparation assistant</div>
-            </div>
-        </div>
-        <div class="voice">🔈 Voice Off</div>
+  <!-- ═══ Tool Sidebar ═══════════════════════════════== -->
+  <div class="tool-sidebar">
+    <div class="ts-header">
+      <h2>🤖 AI Coach</h2>
+      <p>Your personal Gemini powered interview mentor</p>
     </div>
 
-    <!-- Content -->
-    <div class="content">
-        <div class="center-box">
-            <div class="sparkle">✨</div>
-            <h2>How can I help you prepare?</h2>
-            <div class="subtext">
-                Ask me anything about interview preparation — techniques, tips,
-                practice questions, or career advice.
-            </div>
+    <div class="ts-section">PRACTICE MODES</div>
+    <div class="tool-btn active" id="mode-chat" onclick="setMode('chat',this)">
+      <div class="ti">💬</div>
+      <div><div class="tn">Free Chat</div><div class="td">Ask anything about interviews</div></div>
+    </div>
+    <div class="tool-btn" id="mode-mock" onclick="setMode('mock',this)">
+      <div class="ti">🎯</div>
+      <div><div class="tn">Mock Questions</div><div class="td">AI sends 1 question at a time</div></div>
+    </div>
+    <div class="tool-btn" id="mode-star" onclick="setMode('star',this)">
+      <div class="ti">⭐</div>
+      <div><div class="tn">STAR Method Coach</div><div class="td">Practice structured answers</div></div>
+    </div>
+    <div class="tool-btn" id="mode-vocab" onclick="setMode('vocab',this)">
+      <div class="ti">📖</div>
+      <div><div class="tn">Vocab & Phrases</div><div class="td">Professional interview language</div></div>
+    </div>
 
-            <div class="suggestions">
-                <button onclick="fillInput(this)">How should I prepare for a technical interview?</button>
-                <button onclick="fillInput(this)">What is the STAR method?</button>
-                <button onclick="fillInput(this)">Tips for system design interviews</button>
-                <button onclick="fillInput(this)">How to answer 'Tell me about yourself'</button>
-                <button onclick="fillInput(this)">How do I negotiate salary?</button>
-                <button onclick="fillInput(this)">Common behavioral interview mistakes</button>
-            </div>
+    <div class="ts-section">QUICK PROMPTS</div>
+    <div class="prompt-chips">
+      <div class="chip" onclick="sendChip(this)">💪 What are my weak areas for SWE?</div>
+      <div class="chip" onclick="sendChip(this)">🏗️ Explain System Design basics</div>
+      <div class="chip" onclick="sendChip(this)">🤝 Tips for HR round confidence</div>
+      <div class="chip" onclick="sendChip(this)">📊 How to answer "Tell me about yourself"</div>
+      <div class="chip" onclick="sendChip(this)">🧠 What is the STAR method?</div>
+      <div class="chip" onclick="sendChip(this)">😰 How to handle interview nerves?</div>
+    </div>
+
+    <div class="role-strip">
+      <label>Coaching Role Focus</label>
+      <select id="coach-role" onchange="updateRoleContext()">
+        <option value="Software Engineer">Software Engineer</option>
+        <option value="Full Stack Developer">Full Stack Developer</option>
+        <option value="Data Scientist">Data Scientist</option>
+        <option value="ML Engineer">ML Engineer</option>
+        <option value="Product Manager">Product Manager</option>
+        <option value="DevOps Engineer">DevOps Engineer</option>
+        <option value="Frontend Developer">Frontend Developer</option>
+        <option value="Backend Developer">Backend Developer</option>
+        <option value="UI/UX Designer">UI/UX Designer</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ═══ Chat Panel ════════════════════════════════════ -->
+  <div class="chat-panel">
+
+    <!-- Topbar -->
+    <div class="chat-topbar">
+      <div class="ai-orb" id="ai-orb">🤖</div>
+      <div class="tb-info">
+        <h3>Priya — Your AI Coach</h3>
+        <p id="tb-status">Ready · Gemini 1.5 Flash powered</p>
+      </div>
+      <div class="tb-right">
+        <button class="btn btn-ghost btn-sm" onclick="clearChat()">🗑️ Clear</button>
+        <a class="btn btn-primary btn-sm" href="/pages/live_mock.html">🎙️ Start Interview</a>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages" id="messages">
+      <!-- Quick-card grid shown before first message -->
+      <div id="welcome-grid">
+        <div style="text-align:center;padding:2rem 1rem 1rem;">
+          <div style="font-size:2.5rem;margin-bottom:.6rem;">🤖</div>
+          <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:.4rem;">Hi, I'm Priya — your AI Coach</h2>
+          <p style="font-size:.88rem;color:var(--muted);">Powered by Gemini 1.5. Ask me anything about interviews, or pick a mode from the sidebar.</p>
         </div>
+        <div class="quick-cards">
+          <div class="qc" onclick="sendChip(this, '🎯 Give me a hard DSA question for FAANG interviews')">
+            <div class="qi">🎯</div>
+            <div class="qt">Practice a Hard Question</div>
+            <div class="qs">DSA / System Design for FAANG</div>
+          </div>
+          <div class="qc" onclick="sendChip(this, '📄 Review my self introduction and give tips')">
+            <div class="qi">📄</div>
+            <div class="qt">Review My Self Intro</div>
+            <div class="qs">Paste your intro for feedback</div>
+          </div>
+          <div class="qc" onclick="sendChip(this, '🗺️ Create a 30-day interview prep plan for Software Engineer')">
+            <div class="qi">🗺️</div>
+            <div class="qt">30-Day Prep Plan</div>
+            <div class="qs">Structured study roadmap</div>
+          </div>
+          <div class="qc" onclick="sendChip(this, '❓ What are the 10 most common HR round questions?')">
+            <div class="qi">❓</div>
+            <div class="qt">Top HR Questions</div>
+            <div class="qs">Most asked behavioural Qs</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Input -->
-    <div class="input-box">
-        <input type="text" id="userInput" placeholder="Ask about interview techniques, tips, or practice..." />
-        <button class="send-btn" onclick="sendMessage()">➤</button>
+    <div class="input-area">
+      <div class="input-row">
+        <div class="input-wrap">
+          <textarea id="chat-input" placeholder="Ask me anything… interview tips, practice questions, feedback on your answer…" rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"
+            oninput="autoResize(this)"></textarea>
+          <div class="inp-actions">
+            <button id="voice-btn" onclick="toggleVoice()" title="Speak your question">🎤</button>
+          </div>
+        </div>
+        <button class="send-btn" onclick="sendMessage()" id="send-btn">➤</button>
+      </div>
+      <p style="font-size:.7rem;color:#475569;margin-top:.5rem;text-align:center;">Enter to send · Shift+Enter for new line · 🎤 Voice input</p>
     </div>
+  </div>
 
-</div>
+</div><!-- /coach-layout -->
+</div><!-- /pt-main -->
 
 <script>
-function fillInput(btn) {
-    document.getElementById("userInput").value = btn.innerText;
+const API = 'http://localhost:8000';
+const SYNTH = window.speechSynthesis;
+
+let mode         = 'chat';
+let coachRole    = 'Software Engineer';
+let chatHistory  = [];   // [{role:'user'|'model', content}]
+let recognition  = null;
+let isListening  = false;
+let mockCount    = 0;
+
+// ── System prompt per mode ───────────────────────────────
+function getSystemPrompt() {
+  const base = `You are Priya, a friendly but rigorous AI interview coach specialising in ${coachRole} roles at top tech companies. You provide concise, actionable coaching. Use bullet points when helpful. Add relevant examples when explaining concepts.`;
+  const modes = {
+    chat:  base + ' Answer the candidate\'s questions clearly and thoroughly.',
+    mock:  base + ` You are giving a mock interview. Send ONE question at a time. When the user answers, give detailed feedback: what was good, what was missing, then send the next question. Vary question types — technical, behavioural, scenario-based. Always end feedback with "➡️ Next question:"`,
+    star:  base + ' You are coaching the STAR method (Situation, Task, Action, Result). When the user shares an experience, help them structure it into a perfect STAR answer. Point out missing components. Then suggest improvements.',
+    vocab: base + ' You teach professional interview vocabulary and phrases. Give examples of weak vs strong phrasing. Help the user replace filler words and weak language with confident, impactful alternatives.'
+  };
+  return modes[mode] || modes.chat;
 }
 
-function sendMessage() {
-    const input = document.getElementById("userInput");
-    if (input.value.trim() !== "") {
-        alert("You asked: " + input.value);
-        input.value = "";
-    }
+function setMode(m, el) {
+  mode = m;
+  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  const labels = {chat:'Free Chat Mode',mock:'Mock Interview Mode',star:'STAR Coach Mode',vocab:'Vocab Coach Mode'};
+  const icons  = {chat:'💬',mock:'🎯',star:'⭐',vocab:'📖'};
+  addMsg('ai', `${icons[m]} Switched to **${labels[m]}**.\n\n${getModeIntro(m)}`);
 }
+
+function getModeIntro(m) {
+  const intros = {
+    chat:  'Ask me anything — career advice, technical concepts, interview strategy, or get feedback on your answers.',
+    mock:  `I'll give you one interview question at a time for a **${coachRole}** role. Answer each one, and I'll give detailed feedback before moving on. Type "start" to begin!`,
+    star:  'Share any work experience or project with me, and I\'ll help you shape it into a perfect **STAR method** answer for interviews.',
+    vocab: 'I\'ll help you replace weak phrases with powerful interview language. Start by sharing a sentence you\'d typically say in an interview.'
+  };
+  return intros[m] || '';
+}
+
+function updateRoleContext() {
+  coachRole = document.getElementById('coach-role').value;
+  addMsg('ai', `✅ Role focus updated to **${coachRole}**. I'll tailor all coaching and questions for this role.`);
+}
+
+// ── Chat ─────────────────────────────────────────────────
+async function sendMessage() {
+  const inp  = document.getElementById('chat-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value  = '';
+  autoResize(inp);
+  hideWelcome();
+
+  addMsg('user', text);
+  chatHistory.push({ role: 'user', content: text });
+
+  showTyping();
+  document.getElementById('ai-orb').classList.add('thinking');
+  document.getElementById('tb-status').innerText = 'Priya is thinking…';
+  document.getElementById('send-btn').disabled   = true;
+
+  const reply = await callGemini(text);
+  removeTyping();
+  document.getElementById('ai-orb').classList.remove('thinking');
+  document.getElementById('tb-status').innerText = 'Ready · Gemini 1.5 Flash';
+  document.getElementById('send-btn').disabled   = false;
+
+  addMsg('ai', reply);
+  chatHistory.push({ role: 'model', content: reply });
+}
+
+async function callGemini(userMsg) {
+  try {
+    const res  = await fetch(`${API}/api/coach/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message:      userMsg,
+        history:      chatHistory.slice(-10),
+        system_prompt: getSystemPrompt(),
+        role:         coachRole,
+        mode
+      })
+    });
+    const data = await res.json();
+    return data.reply || data.message || 'Sorry, I had trouble generating a response.';
+  } catch(e) {
+    return fallbackReply(userMsg);
+  }
+}
+
+function fallbackReply(msg) {
+  const lower = msg.toLowerCase();
+  if (lower.includes('star'))
+    return '**STAR Method:**\n\n- **S**ituation — Set the context briefly\n- **T**ask — What was your responsibility?\n- **A**ction — What did *you* specifically do?\n- **R**esult — Quantify the outcome\n\nShare an experience and I\'ll help you structure it! *(Tip: start the backend for full Gemini coaching)*';
+  if (lower.includes('tell me about yourself'))
+    return '**"Tell Me About Yourself" Formula:**\n\n1. **Present** — Your current role/skills (30 sec)\n2. **Past** — Relevant experience (30 sec)\n3. **Future** — Why this role excites you (30 sec)\n\nKeep it under 2 minutes. Avoid reading your CV — tell a story!';
+  if (lower.includes('system design'))
+    return '**System Design Basics:**\n\n- Start with **requirements** (functional + non-functional)\n- Estimate **scale** (DAU, QPS, storage)\n- Sketch **high-level architecture**\n- Deep-dive: databases, caching, load balancing\n- Address **bottlenecks** proactively\n\nPractise with: URL shortener, Instagram, WhatsApp.';
+  return '*Connect the backend (uvicorn app:app --port 8000) for full Gemini AI responses.*\n\nI can help with:\n- **Mock questions** for your role\n- **STAR method** structuring\n- **HR round** preparation\n- **Technical concept** explanations';
+}
+
+function sendChip(el, override) {
+  const text = override || el.innerText.replace(/^[^\s]+\s/, '');
+  document.getElementById('chat-input').value = text;
+  sendMessage();
+}
+
+// ── UI helpers ────────────────────────────────────────────
+function addMsg(role, text) {
+  const msgs = document.getElementById('messages');
+  const time  = new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
+  const div   = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.innerHTML = `<div class="msg-bubble">${formatText(text)}</div>
+    <div class="msg-meta">${role==='ai'?'🤖 Priya · ':'You · '}${time}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTo({ top: msgs.scrollHeight, behavior: 'smooth' });
+}
+
+function formatText(t) {
+  return t
+    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/`(.*?)`/g, '<code style="background:rgba(129,140,248,.15);padding:.05rem .3rem;border-radius:4px;font-size:.85em;">$1</code>')
+    .replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>').replace(/^/, '<p>').replace(/$/, '</p>')
+    .replace(/- (.*?)(<br>|<\/p>)/g, '<li>$1</li>$2');
+}
+
+let typingEl = null;
+function showTyping() {
+  typingEl = document.createElement('div');
+  typingEl.className = 'msg ai';
+  typingEl.innerHTML = '<div class="msg-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+  document.getElementById('messages').appendChild(typingEl);
+  document.getElementById('messages').scrollTo({ top: 9999, behavior: 'smooth' });
+}
+function removeTyping() { if (typingEl) { typingEl.remove(); typingEl = null; } }
+
+function hideWelcome() {
+  const w = document.getElementById('welcome-grid');
+  if (w) { w.style.display = 'none'; }
+}
+
+function clearChat() {
+  chatHistory = [];
+  const m = document.getElementById('messages');
+  m.innerHTML = '<div id="welcome-grid" style="opacity:0;animation:fadeUp .4s ease forwards"><p style="text-align:center;padding:2rem;color:var(--muted);">Chat cleared. Start a new conversation!</p></div>';
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// ── Voice input ───────────────────────────────────────────
+function toggleVoice() {
+  if (isListening) { stopVoice(); return; }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { alert('Use Chrome for voice input.'); return; }
+  recognition = new SR();
+  recognition.lang = 'en-IN'; recognition.continuous = false; recognition.interimResults = true;
+  recognition.onstart = () => {
+    isListening = true;
+    document.getElementById('voice-btn').classList.add('listening');
+    document.getElementById('tb-status').innerText = '🎙️ Listening…';
+  };
+  recognition.onresult = e => {
+    const t = Array.from(e.results).map(r => r[0].transcript).join('');
+    document.getElementById('chat-input').value = t;
+    autoResize(document.getElementById('chat-input'));
+  };
+  recognition.onend = () => {
+    stopVoice();
+    if (document.getElementById('chat-input').value.trim()) sendMessage();
+  };
+  recognition.start();
+}
+function stopVoice() {
+  isListening = false;
+  document.getElementById('voice-btn').classList.remove('listening');
+  document.getElementById('tb-status').innerText = 'Ready · Gemini 1.5 Flash';
+  if (recognition) { try { recognition.stop(); } catch(e){} recognition = null; }
+}
+
+// ── Init ──────────────────────────────────────────────────
+(function() {
+  const user = JSON.parse(localStorage.getItem('pt_user') || '{}');
+  if (user.name) {
+    addMsg('ai', `👋 Hey **${user.name}**! I'm Priya, your AI interview coach.\n\nI'm focused on **${coachRole}** interviews. Pick a mode from the sidebar, use a quick prompt, or just ask me anything!`);
+    hideWelcome();
+  }
+})();
 </script>
-
 </body>
 </html>

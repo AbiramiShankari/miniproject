@@ -1,100 +1,285 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interview History</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrepTalk – Session History</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--primary:#4f46e5;--primary-light:#ede9fe;--success:#10b981;--warn:#f59e0b;--danger:#ef4444;--bg:#f8fafc;--card:#fff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+.pt-main{flex:1;overflow-y:auto;}
+.wrap{max-width:1050px;margin:0 auto;padding:2rem 2.5rem;}
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f9fafb;
-    }
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;}
+.page-header h1{font-size:1.75rem;font-weight:800;}
+.page-header p{font-size:.88rem;color:var(--muted);margin-top:.2rem;}
 
-    .container {
-      padding: 40px;
-    }
+/* Filter bar */
+.filter-bar{display:flex;gap:.6rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.filter-chip{padding:.45rem 1rem;border:1px solid var(--border);border-radius:99px;font-size:.82rem;
+  font-weight:600;background:var(--card);cursor:pointer;transition:all .2s;color:var(--muted);}
+.filter-chip:hover,.filter-chip.active{border-color:var(--primary);color:var(--primary);background:var(--primary-light);}
+.filter-right{margin-left:auto;display:flex;gap:.5rem;}
+.btn{padding:.6rem 1.25rem;border:none;border-radius:10px;font-weight:700;font-size:.85rem;
+  cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:.35rem;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-primary:hover{background:#4338ca;transform:translateY(-1px);}
+.btn-ghost{background:var(--card);color:var(--text);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--primary);color:var(--primary);}
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+/* Trend chart */
+.trend-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.5rem;}
+.trend-card h3{font-size:1rem;font-weight:700;margin-bottom:1rem;}
 
-    .header h2 {
-      margin: 0;
-      font-size: 28px;
-    }
+/* Sessions list */
+.sessions-grid{display:flex;flex-direction:column;gap:.75rem;}
+.session-row{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.25rem 1.5rem;
+  display:flex;gap:1.25rem;align-items:center;cursor:pointer;transition:all .2s;}
+.session-row:hover{border-color:var(--primary);transform:translateX(3px);box-shadow:0 4px 16px rgba(79,70,229,.1);}
+.session-row.selected{border-color:var(--primary);background:var(--primary-light);}
+.sess-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;}
+.sess-icon.technical{background:#eff6ff;}
+.sess-icon.hr        {background:#f0fdf4;}
+.sess-icon.behavioral{background:#fef9c3;}
+.sess-icon.mixed     {background:var(--primary-light);}
+.sess-main{flex:1;min-width:0;}
+.sess-main .title{font-weight:700;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sess-main .meta{font-size:.78rem;color:var(--muted);margin-top:.2rem;display:flex;gap:.75rem;flex-wrap:wrap;}
+.sess-score{text-align:center;flex-shrink:0;}
+.score-ring{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;border:3px solid var(--border);}
+.score-ring .s-val{font-size:1rem;font-weight:800;line-height:1;}
+.score-ring .s-lbl{font-size:.55rem;color:var(--muted);font-weight:600;}
+.score-ring.good{border-color:var(--success);}
+.score-ring.ok  {border-color:var(--warn);}
+.score-ring.poor{border-color:var(--danger);}
+.sess-actions{display:flex;gap:.4rem;flex-shrink:0;}
+.tag{padding:.25rem .7rem;border-radius:99px;font-size:.72rem;font-weight:700;}
+.tag-completed{background:#f0fdf4;color:#166534;}
+.tag-started  {background:#fff7ed;color:#92400e;}
 
-    .header p {
-      margin: 5px 0 0;
-      color: #6b7280;
-    }
+/* Compare selection */
+.compare-hint{background:linear-gradient(135deg,var(--primary-light),#f5f3ff);border:1px solid #c7d2fe;
+  border-radius:12px;padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem;display:none;}
+.compare-hint.show{display:flex;}
+.compare-hint p{font-size:.88rem;color:var(--primary);flex:1;}
+.compare-hint strong{font-weight:700;}
 
-    .new-btn {
-      background: linear-gradient(90deg, #3b82f6, #7c3aed);
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    .card {
-      margin-top: 30px;
-      background: #f3f4f6;
-      border-radius: 15px;
-      padding: 60px 20px;
-      text-align: center;
-    }
-
-    .icon {
-      font-size: 40px;
-      color: #9ca3af;
-    }
-
-    .card h3 {
-      margin-top: 20px;
-      font-size: 20px;
-    }
-
-    .card p {
-      color: #6b7280;
-    }
-
-    .start-btn {
-      margin-top: 20px;
-      background: linear-gradient(90deg, #3b82f6, #7c3aed);
-      color: white;
-      border: none;
-      padding: 12px 25px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-  </style>
+.empty-state{text-align:center;padding:4rem;color:var(--muted);}
+.empty-state span{font-size:3rem;display:block;margin-bottom:1rem;}
+.empty-state p{font-size:.95rem;margin-bottom:1.25rem;}
+</style>
 </head>
-
 <body>
+<script src="/static/js/nav.js"></script>
+<div class="pt-main">
+<div class="wrap">
 
-  <div class="container">
-
-    <div class="header">
-      <div>
-        <h2>Interview History</h2>
-        <p>0 sessions completed</p>
-      </div>
-      <button class="new-btn">New Interview →</button>
+  <div class="page-header">
+    <div>
+      <h1>📋 Interview History</h1>
+      <p>All your past sessions — filtered, trended, comparable.</p>
     </div>
-
-    <div class="card">
-      <div class="icon">↺</div>
-      <h3>No interviews yet</h3>
-      <p>Complete your first mock interview to see results here.</p>
-      <button class="start-btn">Start Interview</button>
-    </div>
-
+    <a class="btn btn-primary" href="live_mock.html">+ New Interview</a>
   </div>
 
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <button class="filter-chip active" onclick="filterBy('all',this)">All</button>
+    <button class="filter-chip" onclick="filterBy('technical',this)">💻 Technical</button>
+    <button class="filter-chip" onclick="filterBy('hr',this)">🤝 HR</button>
+    <button class="filter-chip" onclick="filterBy('behavioral',this)">💬 Behavioral</button>
+    <button class="filter-chip" onclick="filterBy('mixed',this)">🔀 Mixed</button>
+    <div class="filter-right">
+      <button class="btn btn-ghost" onclick="selectForCompare()" id="compare-btn" style="display:none;">⚖️ Compare Selected</button>
+    </div>
+  </div>
+
+  <!-- Compare hint -->
+  <div class="compare-hint" id="compare-hint">
+    🔍 <p><strong id="compare-count">0</strong> selected — select 2 sessions to compare side-by-side.</p>
+    <button class="btn btn-primary" onclick="goCompare()" id="go-compare" disabled>Compare →</button>
+    <button class="btn btn-ghost" onclick="clearCompare()">Clear</button>
+  </div>
+
+  <!-- Score trend chart -->
+  <div class="trend-card">
+    <h3>📈 Score Trend Over Time</h3>
+    <canvas id="trend-chart" height="100"></canvas>
+  </div>
+
+  <!-- Session list -->
+  <div class="sessions-grid" id="sessions-grid">
+    <div class="empty-state">
+      <span>⏳</span>
+      <p>Loading your sessions…</p>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+const API = 'http://localhost:8000';
+let allSessions  = [];
+let filterActive = 'all';
+let toCompare    = [];
+
+async function loadSessions() {
+  try {
+    const res  = await fetch(`${API}/api/sessions?limit=50`);
+    const data = await res.json();
+    allSessions = (data.sessions || []).map(s => ({...s, _selected: false}));
+  } catch(e) {
+    allSessions = getSampleSessions();
+  }
+  renderChart();
+  renderList();
+}
+
+function getSampleSessions() {
+  const roles = ['Software Engineer','Full Stack Developer','Data Scientist'];
+  const cats  = ['technical','hr','mixed','behavioral'];
+  return Array.from({length: 8}, (_, i) => ({
+    session_id:     `demo_${i}`,
+    role:           roles[i % 3],
+    category:       cats[i % 4],
+    status:         'completed',
+    avg_score:      Math.round((5 + Math.random() * 4) * 10) / 10,
+    total_questions:5 + (i % 3),
+    created_at:     new Date(Date.now() - i * 2 * 864e5).toISOString(),
+    difficulty:     ['fresher','intermediate'][i % 2],
+  }));
+}
+
+function filterBy(cat, el) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  filterActive = cat;
+  renderList();
+}
+
+function renderList() {
+  const grid = document.getElementById('sessions-grid');
+  const list = filterActive === 'all'
+    ? allSessions
+    : allSessions.filter(s => s.category === filterActive);
+
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty-state">
+      <span>🤷</span>
+      <p>No ${filterActive === 'all' ? '' : filterActive + ' '}sessions found.</p>
+      <a class="btn btn-primary" href="live_mock.html">Start your first interview</a>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map(s => {
+    const date   = new Date(s.created_at || Date.now()).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+    const score  = s.avg_score;
+    const scoreClass = score >= 7.5 ? 'good' : score >= 5 ? 'ok' : 'poor';
+    const icon   = s.category === 'technical' ? '💻' : s.category === 'hr' ? '🤝' : s.category === 'behavioral' ? '💬' : '🎙️';
+    const tag    = s.status === 'completed' ? '<span class="tag tag-completed">✓ Completed</span>' : '<span class="tag tag-started">In Progress</span>';
+    const sel    = s._selected ? ' selected' : '';
+
+    return `<div class="session-row${sel}" onclick="toggleSelect('${s.session_id}',this)" id="row-${s.session_id}">
+      <div class="sess-icon ${s.category}">${icon}</div>
+      <div class="sess-main">
+        <div class="title">${s.role || 'Interview Session'}</div>
+        <div class="meta">
+          <span>📂 ${s.category || 'mixed'}</span>
+          <span>❓ ${s.total_questions || 5} questions</span>
+          <span>📅 ${date}</span>
+          <span>📊 ${s.difficulty || 'fresher'}</span>
+          ${tag}
+        </div>
+      </div>
+      <div class="sess-score">
+        <div class="score-ring ${score ? scoreClass : ''}">
+          <div class="s-val">${score ? score.toFixed(1) : '–'}</div>
+          <div class="s-lbl">/10</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('compare-btn').style.display = 'flex';
+}
+
+function toggleSelect(id, row) {
+  const s = allSessions.find(x => x.session_id === id);
+  if (!s) return;
+
+  if (s._selected) {
+    s._selected = false;
+    row.classList.remove('selected');
+    toCompare = toCompare.filter(x => x !== id);
+  } else if (toCompare.length < 2) {
+    s._selected = true;
+    row.classList.add('selected');
+    toCompare.push(id);
+  }
+
+  const hint      = document.getElementById('compare-hint');
+  const goBtn     = document.getElementById('go-compare');
+  const cntEl     = document.getElementById('compare-count');
+  cntEl.innerText = toCompare.length;
+  hint.classList.toggle('show', toCompare.length > 0);
+  goBtn.disabled  = (toCompare.length < 2);
+}
+
+function clearCompare() {
+  toCompare = [];
+  allSessions.forEach(s => s._selected = false);
+  document.getElementById('compare-hint').classList.remove('show');
+  renderList();
+}
+
+function goCompare() {
+  if (toCompare.length < 2) return;
+  const url = `/pages/compare.html?a=${toCompare[0]}&b=${toCompare[1]}`;
+  window.location.href = url;
+}
+
+function renderChart() {
+  const scored = [...allSessions].filter(s => s.avg_score).reverse();
+  if (!scored.length) return;
+
+  const labels = scored.map(s => new Date(s.created_at || Date.now()).toLocaleDateString('en-IN',{day:'numeric',month:'short'}));
+  const scores = scored.map(s => s.avg_score);
+
+  const ctx = document.getElementById('trend-chart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets:[{
+        label: 'AI Score',
+        data:  scores,
+        fill:  true,
+        backgroundColor: 'rgba(79,70,229,.08)',
+        borderColor:    '#4f46e5',
+        borderWidth:    2,
+        tension:        .4,
+        pointBackgroundColor: '#4f46e5',
+        pointRadius:    5,
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { min: 0, max: 10, grid: {color:'#f1f5f9'}, ticks:{stepSize:2} },
+        x: { grid: {display:false} }
+      },
+      plugins: { legend: {display:false} },
+    }
+  });
+}
+
+loadSessions();
+</script>
 </body>
 </html>

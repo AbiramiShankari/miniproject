@@ -1,235 +1,336 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- PDF parsing -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<!-- DOCX parsing -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Upload Resume</title>
-
+<title>PrepTalk – Resume & ATS Checker</title>
+<meta name="description" content="Upload your resume for AI-powered ATS scoring, keyword analysis, and personalised self-intro generation.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-body {
-    margin: 0;
-    font-family: "Segoe UI", Arial, sans-serif;
-    background-color: #f5f7fb;
-    color: #1a1a1a;
-}
+:root{--primary:#4f46e5;--primary-light:#ede9fe;--success:#10b981;--warn:#f59e0b;--danger:#ef4444;--bg:#f8fafc;--card:#fff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;}
+.pt-main{flex:1;overflow-y:auto;}
+.page-inner{padding:2rem 2.5rem;max-width:900px;margin:0 auto;}
 
-.container {
-    width: 80%;
-    max-width: 900px;
-    margin: 50px auto;
-}
+.page-header{margin-bottom:2rem;}
+.page-header h1{font-size:2rem;font-weight:800;margin-bottom:.35rem;}
+.page-header p{color:var(--muted);}
 
-h1 {
-    font-size: 32px;
-    margin-bottom: 8px;
-}
+/* Upload box */
+.upload-zone{border:2px dashed var(--border);border-radius:16px;padding:3rem 2rem;text-align:center;background:var(--card);cursor:pointer;transition:all .2s;margin-bottom:1.5rem;}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--primary);background:var(--primary-light);}
+.upload-zone .uz-icon{font-size:2.5rem;margin-bottom:.75rem;}
+.upload-zone h3{font-size:1.1rem;font-weight:700;margin-bottom:.35rem;}
+.upload-zone p{font-size:.85rem;color:var(--muted);}
 
-.subtext {
-    color: #6b7280;
-    font-size: 16px;
-    margin-bottom: 30px;
-}
+/* Role selector */
+.role-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+.role-chip{padding:.5rem 1.1rem;border:2px solid var(--border);border-radius:99px;cursor:pointer;font-size:.85rem;font-weight:600;transition:all .2s;background:var(--card);}
+.role-chip.active,.role-chip:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light);}
 
-.upload-box {
-    border: 2px dashed #b6c4e0;
-    border-radius: 16px;
-    padding: 50px 20px;
-    text-align: center;
-    background-color: #ffffff;
-    cursor: pointer;
-}
+/* Textarea */
+.divider{text-align:center;color:var(--muted);margin:.75rem 0;font-size:.85rem;}
+textarea{width:100%;height:180px;padding:1rem;border:1px solid var(--border);border-radius:12px;font-family:'Inter',sans-serif;font-size:.95rem;resize:vertical;outline:none;transition:border-color .2s;}
+textarea:focus{border-color:var(--primary);}
 
-.upload-icon {
-    width: 70px;
-    height: 70px;
-    background: #eef2ff;
-    border-radius: 50%;
-    margin: 0 auto 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+/* Buttons */
+.btn-row{margin-top:1.25rem;display:flex;gap:.75rem;flex-wrap:wrap;}
+.btn{padding:.75rem 1.5rem;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:.95rem;font-family:'Inter',sans-serif;transition:all .2s;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-primary:hover{background:#4338ca;transform:translateY(-1px);}
+.btn-ghost{background:#f1f5f9;color:var(--text);border:1px solid var(--border);}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
 
-.upload-icon::before {
-    content: "⬆";
-    font-size: 28px;
-    color: #4f46e5;
-}
+/* Results */
+.results{display:none;margin-top:2rem;animation:fadeIn .4s ease;}
+.results.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-.upload-text {
-    font-size: 18px;
-    margin-bottom: 6px;
-}
+.score-header{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.25rem;}
+.score-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1rem;}
+.score-box{text-align:center;padding:1rem;background:#f8fafc;border-radius:10px;}
+.score-box .val{font-size:1.75rem;font-weight:800;}
+.score-box .lbl{font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:.25rem;}
+.score-good{color:var(--success);}
+.score-mid{color:var(--warn);}
+.score-bad{color:var(--danger);}
 
-.upload-subtext {
-    color: #6b7280;
-    font-size: 14px;
-}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.25rem;}
+.card h3{font-weight:700;margin-bottom:1rem;font-size:1rem;}
 
-.divider {
-    text-align: center;
-    margin: 25px 0;
-    color: #9ca3af;
-}
+.kw-chips{display:flex;flex-wrap:wrap;gap:.5rem;}
+.kw-chip{padding:.35rem .85rem;border-radius:99px;font-size:.8rem;font-weight:600;}
+.kw-present{background:#dcfce7;color:#166534;}
+.kw-missing{background:#fee2e2;color:#b91c1c;}
 
-textarea {
-    width: 100%;
-    height: 180px;
-    border-radius: 12px;
-    border: 1px solid #d1d5db;
-    padding: 15px;
-    font-size: 15px;
-    outline: none;
-    resize: none;
-}
+.fb-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.fb-box{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:1rem;}
+.fb-box h4{font-size:.88rem;margin-bottom:.6rem;}
+.fb-box li{list-style:none;font-size:.85rem;color:var(--muted);padding:.3rem 0;border-bottom:1px solid var(--border);}
+.fb-box li:last-child{border:0;}
+.fb-box li::before{content:"→ ";color:var(--primary);}
 
-.btn {
-    margin-top: 25px;
-    padding: 14px 24px;
-    border: none;
-    border-radius: 12px;
-    background: linear-gradient(90deg, #6d7dfc, #a78bfa);
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
+.intro-box{background:var(--primary-light);border:1px solid #c7d2fe;border-radius:12px;padding:1.25rem;font-style:italic;color:#3730a3;line-height:1.65;font-size:.95rem;}
 
-.btn::before {
-    content: "✨";
-}
-
-.status {
-    margin-top: 15px;
-    font-size: 14px;
-}
+@media(max-width:600px){.score-grid{grid-template-columns:repeat(2,1fr);}.fb-grid{grid-template-columns:1fr;}}
 </style>
 </head>
-
 <body>
+<script src="/static/js/nav.js"></script>
+<div class="pt-main">
+<div class="page-inner">
 
-<div class="container">
+  <div class="page-header">
+    <h1>📄 Resume & ATS Checker</h1>
+    <p>Upload your resume — AI scores ATS compatibility, finds missing keywords, and drafts your self-introduction.</p>
+  </div>
 
-    <h1>Upload Resume</h1>
-    <div class="subtext">
-        Upload or paste your resume for AI-powered analysis, ATS scoring & self-intro curation.
+  <!-- Upload zone -->
+  <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()"
+       ondragover="event.preventDefault();this.classList.add('drag')"
+       ondragleave="this.classList.remove('drag')"
+       ondrop="handleDrop(event)">
+    <div class="uz-icon">📂</div>
+    <h3>Drop your resume or click to upload</h3>
+    <p>PDF · DOCX · DOC · TXT · MD &nbsp;·&nbsp; up to 10 MB</p>
+    <input type="file" id="file-input" accept=".txt,.md,.pdf,.doc,.docx" hidden onchange="handleFile(event)">
+  </div>
+
+  <!-- Target role -->
+  <p style="font-weight:600;margin-bottom:.75rem;">Target Role:</p>
+  <div class="role-row" id="role-row">
+    <button class="role-chip active" onclick="selectRole(this,'Software Engineer')">Software Engineer</button>
+    <button class="role-chip" onclick="selectRole(this,'Full Stack Developer')">Full Stack Developer</button>
+    <button class="role-chip" onclick="selectRole(this,'Data Scientist')">Data Scientist</button>
+    <button class="role-chip" onclick="selectRole(this,'ML Engineer')">ML Engineer</button>
+    <button class="role-chip" onclick="selectRole(this,'Product Manager')">Product Manager</button>
+    <button class="role-chip" onclick="selectRole(this,'DevOps Engineer')">DevOps Engineer</button>
+  </div>
+
+  <div class="divider">— or paste resume text —</div>
+  <textarea id="resume-text" placeholder="Paste your resume content here…&#10;&#10;Include skills, experience, education, and projects."></textarea>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" id="analyze-btn" onclick="analyzeResume()">✨ Analyze with Gemini AI</button>
+    <button class="btn btn-ghost" onclick="clearForm()">🗑️ Clear</button>
+  </div>
+
+  <p id="status-msg" style="margin-top:.75rem;font-size:.85rem;color:var(--muted);"></p>
+
+  <!-- Results -->
+  <div class="results" id="results">
+
+    <div class="score-header">
+      <h2 style="font-size:1.25rem;font-weight:800;">ATS Analysis Results</h2>
+      <div class="score-grid">
+        <div class="score-box"><div class="val" id="r-ats">–</div><div class="lbl">ATS Score</div></div>
+        <div class="score-box"><div class="val" id="r-kw">–</div><div class="lbl">Keywords</div></div>
+        <div class="score-box"><div class="val" id="r-fmt">–</div><div class="lbl">Format</div></div>
+        <div class="score-box"><div class="val" id="r-exp">–</div><div class="lbl">Experience</div></div>
+      </div>
     </div>
 
-    <div class="upload-box" id="uploadBox">
-        <div class="upload-icon"></div>
-        <div class="upload-text">Drop your resume here or click to upload</div>
-        <div class="upload-subtext">TXT, MD formats • up to 10MB</div>
-        <input type="file" id="fileInput" accept=".txt,.md" hidden>
+    <p id="r-feedback" style="color:var(--muted);font-size:.95rem;line-height:1.65;margin-bottom:1.25rem;"></p>
+
+    <!-- Keywords -->
+    <div class="card">
+      <h3>🔍 Keyword Analysis</h3>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:.75rem;">Present in your resume vs what's missing for the role.</p>
+      <div style="margin-bottom:.75rem;">
+        <p style="font-size:.8rem;font-weight:700;color:var(--success);margin-bottom:.4rem;">✓ FOUND</p>
+        <div class="kw-chips" id="kw-present"></div>
+      </div>
+      <div>
+        <p style="font-size:.8rem;font-weight:700;color:var(--danger);margin-bottom:.4rem;">✗ MISSING</p>
+        <div class="kw-chips" id="kw-missing"></div>
+      </div>
     </div>
 
-    <div class="divider">— or paste your resume content below —</div>
+    <!-- Strengths & Improvements -->
+    <div class="fb-grid">
+      <div class="fb-box"><h4>✨ Strengths</h4><ul id="r-strengths"></ul></div>
+      <div class="fb-box"><h4>📈 Improvements</h4><ul id="r-improvements"></ul></div>
+    </div>
 
-    <textarea id="resumeText" placeholder="Paste your resume text here...
+    <!-- Self Intro -->
+    <div class="card" style="margin-top:1.25rem;">
+      <h3>🎤 AI-Generated Self Introduction</h3>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:.75rem;">Customised from your resume — edit and use in your interviews.</p>
+      <div class="intro-box" id="r-intro"></div>
+      <button class="btn btn-ghost" style="margin-top:.75rem;" onclick="copyIntro()">📋 Copy Intro</button>
+    </div>
 
-Include your skills, experience, projects, and education."></textarea>
-
-    <br>
-    <button class="btn" onclick="analyzeResume()">Analyze with AI</button>
-
-    <div class="status" id="status"></div>
-
+  </div>
+</div>
 </div>
 
 <script>
-const uploadBox = document.getElementById("uploadBox");
-const fileInput = document.getElementById("fileInput");
-const status = document.getElementById("status");
-const textarea = document.getElementById("resumeText");
+const API = 'http://localhost:8000';
+let selectedRole = 'Software Engineer';
 
-/* Open file picker */
-uploadBox.addEventListener("click", () => {
-    fileInput.click();
-});
-
-/* Handle file selection */
-fileInput.addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    processFile(file);
-});
-
-/* Drag & Drop */
-uploadBox.addEventListener("dragover", (e) => {
-    e.preventDefault();
-});
-
-uploadBox.addEventListener("drop", (e) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    processFile(file);
-});
-
-/* Process File */
-function processFile(file) {
-    if (!file) return;
-
-    const allowedTypes = ["text/plain", "text/markdown"];
-
-    if (!allowedTypes.includes(file.type)) {
-        status.innerText = "❌ Only TXT or MD files are supported";
-        return;
-    }
-
-    if (file.size > 10 * 1024 * 1024) {
-        status.innerText = "❌ File too large (Max 10MB)";
-        return;
-    }
-
-    status.innerText = "Uploading...";
-
-    const reader = new FileReader();
-
-    reader.onload = function(e) {
-        const content = e.target.result;
-        textarea.value = content;
-        status.innerText = "✅ File uploaded successfully!";
-    };
-
-    reader.readAsText(file);
+function selectRole(el, role) {
+  document.querySelectorAll('.role-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  selectedRole = role;
 }
 
-/* Improved AI Analysis */
-function analyzeResume() {
-    const text = textarea.value.toLowerCase();
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag');
+  if (e.dataTransfer.files[0]) readResume(e.dataTransfer.files[0]);
+}
+function handleFile(e) { if (e.target.files[0]) readResume(e.target.files[0]); }
 
-    if (!text.trim()) {
-        status.innerText = "❌ Please upload or paste resume";
-        return;
+async function readResume(file) {
+  if (file.size > 10 * 1024 * 1024) { alert('File too large (max 10 MB)'); return; }
+  const ext  = file.name.split('.').pop().toLowerCase();
+  const zone = document.getElementById('upload-zone');
+  const h3   = zone.querySelector('h3');
+  const p    = zone.querySelector('p');
+  h3.innerText = '⏳ Reading ' + file.name + '…';
+
+  try {
+    let text = '';
+
+    if (ext === 'pdf') {
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      const buf   = await file.arrayBuffer();
+      const pdf   = await pdfjsLib.getDocument({ data: buf }).promise;
+      const pages = [];
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page    = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        pages.push(content.items.map(it => it.str).join(' '));
+      }
+      text = pages.join('\n');
+
+    } else if (ext === 'docx' || ext === 'doc') {
+      const buf    = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer: buf });
+      text = result.value;
+
+    } else {
+      text = await file.text();
     }
 
-    status.innerText = "Analyzing with AI...";
+    if (!text.trim()) throw new Error('Empty file');
+    document.getElementById('resume-text').value = text.trim();
+    zone.classList.add('loaded');
+    h3.innerText = '✅ ' + file.name;
+    p.innerText  = (text.length / 1000).toFixed(1) + 'k characters extracted';
+    setStatus('✅ File loaded: ' + file.name);
 
+  } catch(err) {
+    console.error(err);
+    h3.innerText = '❌ Could not read ' + file.name;
+    p.innerText  = 'Try .txt or paste your resume below.';
+    zone.style.borderColor = '#ef4444';
     setTimeout(() => {
-        let score = 0;
+      zone.style.borderColor = '';
+      h3.innerText = 'Drop your resume or click to upload';
+      p.innerText  = 'PDF · DOCX · TXT · MD';
+    }, 3000);
+  }
+}
 
-        const keywords = {
-            skills: ["skills", "technical skills", "core skills"],
-            experience: ["experience", "work experience", "internship"],
-            education: ["education", "qualification", "degree"],
-            projects: ["project", "projects"]
-        };
 
-        if (keywords.skills.some(k => text.includes(k))) score += 25;
-        if (keywords.experience.some(k => text.includes(k))) score += 25;
-        if (keywords.education.some(k => text.includes(k))) score += 25;
-        if (keywords.projects.some(k => text.includes(k))) score += 25;
+function setStatus(msg) {
+  document.getElementById('status-msg').innerText = msg;
+}
 
-        if (score >= 75) {
-            status.innerText = "✅ Resume looks good! ATS Score: " + score + "%";
-        } else if (score >= 40) {
-            status.innerText = "⚠️ Resume is average. Improve sections. Score: " + score + "%";
-        } else {
-            status.innerText = "❌ Resume incomplete. Add more sections. Score: " + score + "%";
-        }
-    }, 1500);
+function clearForm() {
+  document.getElementById('resume-text').value = '';
+  document.getElementById('results').classList.remove('active');
+  setStatus('');
+}
+
+function colorScore(val) {
+  if (val >= 75) return 'score-good';
+  if (val >= 45) return 'score-mid';
+  return 'score-bad';
+}
+
+async function analyzeResume() {
+  const text = document.getElementById('resume-text').value.trim();
+  const btn  = document.getElementById('analyze-btn');
+
+  if (!text) { alert('Please upload or paste your resume.'); return; }
+
+  btn.innerText = '⏳ Analysing with Gemini…'; btn.disabled = true;
+  setStatus('Sending to Gemini AI — this may take 5-10 seconds…');
+
+  try {
+    const res = await fetch(`${API}/api/ats/analyze`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        resume_text: text,
+        target_role: selectedRole,
+        user_id: 'guest'
+      })
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    renderResults(data);
+    setStatus(`✅ Analysis complete! Stored with Resume ID: ${data.resume_id}`);
+
+  } catch(err) {
+    setStatus(`❌ Error: ${err.message}. Is the backend running at localhost:8000?`);
+    console.error(err);
+  } finally {
+    btn.innerText = '✨ Analyze with Gemini AI'; btn.disabled = false;
+  }
+}
+
+function renderResults(data) {
+  // Scores
+  const ats = data.ats_score || 0;
+  const kw  = data.keyword_score || 0;
+  const fmt = data.format_score  || 0;
+  const exp = data.experience_score || 0;
+
+  document.getElementById('r-ats').innerText  = ats + '%';
+  document.getElementById('r-kw').innerText   = kw  + '%';
+  document.getElementById('r-fmt').innerText  = fmt + '%';
+  document.getElementById('r-exp').innerText  = exp + '%';
+
+  document.getElementById('r-ats').className = 'val ' + colorScore(ats);
+  document.getElementById('r-kw').className  = 'val ' + colorScore(kw);
+  document.getElementById('r-fmt').className = 'val ' + colorScore(fmt);
+  document.getElementById('r-exp').className = 'val ' + colorScore(exp);
+
+  document.getElementById('r-feedback').innerText = data.overall_feedback || '';
+
+  // Keywords
+  document.getElementById('kw-present').innerHTML =
+    (data.present_keywords || []).map(k => `<span class="kw-chip kw-present">${k}</span>`).join('');
+  document.getElementById('kw-missing').innerHTML =
+    (data.missing_keywords || []).map(k => `<span class="kw-chip kw-missing">${k}</span>`).join('');
+
+  // Strengths & Improvements
+  document.getElementById('r-strengths').innerHTML =
+    (data.strengths || []).map(s => `<li>${s}</li>`).join('');
+  document.getElementById('r-improvements').innerHTML =
+    (data.improvements || []).map(s => `<li>${s}</li>`).join('');
+
+  // Self intro
+  document.getElementById('r-intro').innerText = data.self_intro_draft || '–';
+
+  document.getElementById('results').classList.add('active');
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+}
+
+function copyIntro() {
+  const text = document.getElementById('r-intro').innerText;
+  navigator.clipboard.writeText(text).then(() => alert('✅ Copied to clipboard!'));
 }
 </script>
-
 </body>
 </html>

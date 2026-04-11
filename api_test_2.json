@@ -1,0 +1,85 @@
+{
+  "ATS": {
+    "resume_id": "8cf43bb3-1f14-4282-8f29-53a7ab331cc8",
+    "ats_score": 5,
+    "keyword_score": 10,
+    "format_score": 0,
+    "experience_score": 0,
+    "present_keywords": [
+      "python",
+      "developer"
+    ],
+    "missing_keywords": [
+      "Django",
+      "Flask",
+      "REST API",
+      "SQL",
+      "Git",
+      "Data Structures",
+      "Algorithms",
+      "AWS",
+      "Docker",
+      "Unit Testing",
+      "Problem Solving",
+      "Object-Oriented Programming",
+      "API development",
+      "Web frameworks",
+      "Linux",
+      "Agile/Scrum"
+    ],
+    "strengths": [
+      "Directly states target role"
+    ],
+    "improvements": [
+      "Develop a standard resume format including sections for Contact Information, Summary/Objective, Technical Skills, Work Experience, Projects, and Education",
+      "Elaborate on specific Python frameworks, libraries, and tools you have experience with (e.g., Django, Flask, FastAPI, NumPy, Pandas)",
+      "Detail your work experience with specific roles, companies, dates, key responsibilities, and quantifiable achievements",
+      "Include a dedicated 'Skills' section listing programming languages, databases, cloud platforms, version control, and development methodologies",
+      "Add relevant projects, personal or professional, describing your role, technologies used, and project outcomes",
+      "Provide your educational background (degrees, certifications, university, graduation dates)"
+    ],
+    "overall_feedback": "This resume is merely a statement of intent and completely lacks the essential structure and content required for an ATS to effectively parse it. While it directly mentions 'python developer', it provides no supporting details regarding skills, experience, projects, or education, making it impossible to assess your qualifications. To be competitive in the Indian job market, you must build a comprehensive resume that details your capabilities and experiences.",
+    "self_intro_draft": "Hello, I am a passionate Python developer with a foundational understanding of the language. I am eager to apply my skills to real-world challenges and contribute effectively to your team. I am keen to learn and grow within a dynamic environment, building upon my Python expertise."
+  },
+  "COACH": {
+    "thread_id": "971b73f1-4ae1-4af3-a7fb-da50fb7c6069",
+    "reply": "Hello! \ud83d\udc4b Great to connect. I'm PrepTalk AI Coach, ready to help you ace your interviews.\n\nTell me, what's on your mind today? I can assist you with:\n\n*   **Technical preparation** (DSA, OS, DBMS, System Design)\n*   **Behavioural questions** (STAR method)\n*   **HR rounds & Salary negotiation**\n*   **Self-introduction crafting**\n*   **Resume feedback**\n*   **GD tips**\n\nHow can I help you prepare for your next big opportunity?"
+  },
+  "SPEECH": {
+    "score": 1,
+    "clarity_score": 2,
+    "confidence_score": 1,
+    "relevance_score": 3,
+    "overall_feedback": "Your answer is technically correct but critically incomplete. It shows a very basic, superficial understanding and lacks the depth expected from an engineering professional. You need to elaborate significantly to demonstrate actual knowledge and interest.",
+    "strengths": [
+      "The statement is technically accurate."
+    ],
+    "improvements": [
+      "Avoid filler words like 'Um' to project confidence and preparedness.",
+      "Elaborate significantly on what Python is, beyond just stating it's a language.",
+      "Highlight its key features, applications, and why it's popular.",
+      "Demonstrate a deeper understanding and enthusiasm for the technology."
+    ],
+    "ideal_answer_hint": "A strong answer should define Python as a high-level, interpreted, object-oriented programming language, highlighting its readability, versatility, and popular applications across domains like web development, data science, and AI, along with its extensive libraries.",
+    "filler_word_count": 0,
+    "filler_words_found": []
+  },
+  "COMM": {
+    "score": 2,
+    "clarity_score": 4,
+    "confidence_score": 2,
+    "relevance_score": 3,
+    "filler_word_count": 0,
+    "filler_words_found": [],
+    "overall_feedback": "Your response was very brief and did not add substantial value to the discussion. While expressing agreement is a start, it's crucial to elaborate on your thoughts to contribute meaningfully and demonstrate your understanding.",
+    "strengths": [
+      "Expressed agreement with the previous speaker"
+    ],
+    "improvements": [
+      "Elaborate on your points: Explain *why* you agree or disagree, provide supporting reasons, examples, or data.",
+      "Avoid filler words: The use of 'Um' can undermine your confidence and create a hesitant impression.",
+      "Contribute meaningfully: Aim to build upon previous points or introduce a new, relevant perspective to advance the discussion."
+    ],
+    "ideal_answer_hint": "A strong response would state agreement, provide a clear reason or example to support that agreement, and ideally add a new dimension or build upon a previous point to move the discussion forward."
+  }
+}

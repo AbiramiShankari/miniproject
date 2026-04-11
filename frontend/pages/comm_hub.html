@@ -2,200 +2,304 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Communication Training Hub</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<title>PrepTalk – Communication Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-body{
-    font-family: Arial, sans-serif;
-    background:#f5f7fb;
-    padding:30px;
-}
+:root{--primary:#4f46e5;--primary-light:#ede9fe;--success:#10b981;--bg:#f8fafc;--card:#fff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;}
+.pt-main{flex:1;overflow-y:auto;}
+.page-inner{padding:2.5rem;max-width:900px;margin:0 auto;}
 
-/* HEADER */
-h1{
-    font-size:28px;
-}
+.page-header{margin-bottom:2rem;}
+.page-header h1{font-size:2rem;font-weight:800;margin-bottom:.35rem;}
+.page-header p{color:var(--muted);}
 
-.subtitle{
-    color:#666;
-    margin-bottom:20px;
-}
+/* Tabs */
+.tabs{display:flex;flex-wrap:wrap;gap:.5rem;background:#e2e8f0;padding:.5rem;border-radius:12px;margin-bottom:2rem;}
+.tab{padding:.65rem 1.1rem;border-radius:8px;cursor:pointer;font-weight:500;transition:all .2s;border:none;background:transparent;color:var(--muted);font-size:.9rem;font-family:'Inter',sans-serif;}
+.tab:hover{color:var(--text);}
+.tab.active{background:var(--card);color:var(--primary);box-shadow:0 4px 6px -1px rgba(0,0,0,.1);font-weight:600;}
+.tab:focus-visible{outline:2px solid var(--primary);outline-offset:2px;}
 
-/* TABS */
-.tabs{
-    display:flex;
-    gap:10px;
-    background:#eee;
-    padding:10px;
-    border-radius:10px;
-}
+/* Prompt chips */
+.prompt-chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem;}
+.chip{padding:.45rem 1rem;border:1px solid var(--border);border-radius:99px;font-size:.8rem;font-weight:500;cursor:pointer;background:var(--card);color:var(--muted);transition:all .2s;}
+.chip:hover{border-color:var(--primary);color:var(--primary);}
 
-.tab{
-    padding:8px 15px;
-    border-radius:8px;
-    cursor:pointer;
-}
+/* Card */
+.content-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;box-shadow:0 4px 12px rgba(0,0,0,.04);}
+.module-header{margin-bottom:1.5rem;}
+.module-header h2{font-size:1.5rem;font-weight:700;margin-bottom:.35rem;}
+.module-header p{color:var(--muted);}
 
-.active{
-    background:white;
-    box-shadow:0 2px 5px rgba(0,0,0,0.1);
-}
+/* Mic toggle for voice mode */
+.voice-row{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;}
+.mic-btn{padding:.6rem 1.2rem;border:2px dashed var(--border);border-radius:10px;background:transparent;cursor:pointer;font-weight:600;color:var(--muted);font-family:'Inter',sans-serif;transition:all .2s;}
+.mic-btn.active{border-color:var(--primary);color:var(--primary);background:var(--primary-light);}
+.mic-status{font-size:.85rem;color:var(--muted);}
 
-/* CONTENT */
-.content{
-    margin-top:30px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
+textarea{width:100%;min-height:140px;padding:1rem;border-radius:10px;border:1px solid var(--border);font-family:'Inter',sans-serif;font-size:.95rem;resize:vertical;transition:border-color .2s;}
+textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1);}
 
-.left{
-    max-width:60%;
-}
+.btn{padding:.75rem 1.5rem;border:none;border-radius:10px;background:var(--primary);color:#fff;cursor:pointer;font-size:.95rem;font-weight:600;transition:all .2s;font-family:'Inter',sans-serif;}
+.btn:hover{background:#4338ca;}
+.btn:disabled{opacity:.6;cursor:not-allowed;}
 
-.left h2{
-    margin-bottom:10px;
-}
+/* Feedback */
+.feedback-section{margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border);display:none;animation:fadeUp .4s ease;}
+.feedback-section.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-.left p{
-    color:#666;
-}
+.score-row{display:flex;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap;}
+.score-pill{text-align:center;padding:.75rem 1.25rem;border-radius:12px;background:var(--primary-light);flex:1;min-width:80px;}
+.score-pill .val{font-size:1.5rem;font-weight:800;color:var(--primary);}
+.score-pill .lbl{font-size:.7rem;color:var(--muted);font-weight:500;}
 
-/* BUTTON */
-.btn{
-    padding:12px 20px;
-    border:none;
-    border-radius:10px;
-    background:linear-gradient(90deg,#4c5cff,#8a5cff);
-    color:white;
-    cursor:pointer;
-}
+.filler-warn{background:#fef9c3;border:1px solid #fde68a;border-radius:8px;padding:.6rem 1rem;margin-bottom:1rem;font-size:.85rem;color:#92400e;}
 
-/* INPUT */
-input{
-    padding:10px;
-    width:250px;
-    border-radius:8px;
-    border:1px solid #ccc;
-    margin-top:10px;
-}
+.fb-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem;}
+.fb-box{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:1rem;}
+.fb-box h4{font-size:.85rem;margin-bottom:.5rem;}
+.fb-box li{list-style:none;font-size:.85rem;color:var(--muted);padding:.25rem 0;border-bottom:1px solid var(--border);}
+.fb-box li:last-child{border:0;}
+.hint-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1rem;margin-top:1rem;font-size:.88rem;color:#166534;}
+
+@media(max-width:600px){.fb-grid{grid-template-columns:1fr;}}
 </style>
 </head>
-
 <body>
+<script src="/static/js/nav.js"></script>
+<div class="pt-main">
+<div class="page-inner">
 
-<h1>Communication Training Hub</h1>
-<p class="subtitle">
-Master every aspect of professional communication — introductions, discussions, emails, presentations & more.
-</p>
+  <div class="page-header">
+    <h1>Communication Training Hub</h1>
+    <p>Practice self-intros, GD, HR rounds, and more — with live speech recognition and AI feedback.</p>
+  </div>
 
-<!-- TABS -->
-<div class="tabs">
-    <div class="tab active" onclick="changeTab('self')">Self Intro</div>
-    <div class="tab" onclick="changeTab('gd')">GD</div>
-    <div class="tab" onclick="changeTab('tech')">Tech HR</div>
-    <div class="tab" onclick="changeTab('hr')">General HR</div>
-    <div class="tab" onclick="changeTab('role')">Role-Specific</div>
-    <div class="tab" onclick="changeTab('email')">Email</div>
-    <div class="tab" onclick="changeTab('presentation')">Presentation</div>
-</div>
+  <div class="tabs" role="tablist">
+    <button class="tab active" role="tab" onclick="changeCategory('self',this)">🙋 Self Intro</button>
+    <button class="tab" role="tab" onclick="changeCategory('gd',this)">🗣️ Group Discussion</button>
+    <button class="tab" role="tab" onclick="changeCategory('hr',this)">👔 General HR</button>
+    <button class="tab" role="tab" onclick="changeCategory('tech',this)">🔧 Tech HR</button>
+    <button class="tab" role="tab" onclick="changeCategory('email',this)">✉️ Email Writing</button>
+  </div>
 
-<!-- CONTENT -->
-<div class="content" id="content">
-
-    <!-- DEFAULT -->
-    <div class="left">
-        <h2>Self Introduction Practice</h2>
-        <p>Practice introducing yourself for different interview scenarios</p>
+  <main class="content-card">
+    <div class="module-header">
+      <h2 id="mod-title">Self Introduction Practice</h2>
+      <p id="mod-desc">Craft a compelling 60-second pitch. Highlight your background, skills, and what makes you unique.</p>
     </div>
 
-    <button class="btn">Start Practice</button>
+    <!-- Prompt chips -->
+    <div class="prompt-chips" id="prompt-chips"></div>
 
+    <!-- Voice input row -->
+    <div class="voice-row">
+      <button class="mic-btn" id="mic-toggle" onclick="toggleVoice()">🎤 Voice Input</button>
+      <span class="mic-status" id="mic-status">Click to speak your answer</span>
+    </div>
+
+    <!-- Text area -->
+    <div style="margin-bottom:1rem;">
+      <label for="practice-input" style="display:block;font-weight:600;margin-bottom:.5rem;">Your Response:</label>
+      <textarea id="practice-input" placeholder="Type or speak your response here…"></textarea>
+    </div>
+
+    <button class="btn" id="eval-btn" onclick="evaluateResponse()">🧠 Evaluate Response</button>
+
+    <!-- Feedback -->
+    <div class="feedback-section" id="feedback-section">
+      <h3 style="margin-bottom:1.25rem;">AI Evaluation Results</h3>
+
+      <div class="score-row">
+        <div class="score-pill"><div class="val" id="fb-score">–</div><div class="lbl">Overall</div></div>
+        <div class="score-pill"><div class="val" id="fb-clarity">–</div><div class="lbl">Clarity</div></div>
+        <div class="score-pill"><div class="val" id="fb-conf">–</div><div class="lbl">Confidence</div></div>
+        <div class="score-pill"><div class="val" id="fb-rel">–</div><div class="lbl">Relevance</div></div>
+      </div>
+
+      <div class="filler-warn" id="filler-warn" style="display:none;">
+        ⚠️ Filler words found: <strong id="filler-list"></strong>
+      </div>
+
+      <p id="fb-main" style="color:var(--muted);line-height:1.65;margin-bottom:1rem;"></p>
+
+      <div class="fb-grid">
+        <div class="fb-box"><h4>✨ Strengths</h4><ul id="fb-str"></ul></div>
+        <div class="fb-box"><h4>📈 Improvements</h4><ul id="fb-imp"></ul></div>
+      </div>
+      <div class="hint-box" id="fb-hint"></div>
+    </div>
+  </main>
+
+</div>
 </div>
 
 <script>
-function changeTab(type){
+const API = 'http://localhost:8000';
+let currentCat = 'self';
+let voiceActive = false;
+let recognition = null;
 
-    let content = document.getElementById("content");
+const categories = {
+  self: {
+    title: 'Self Introduction Practice',
+    desc: 'Craft a compelling 60-second pitch. Highlight your background, skills, and what makes you unique.',
+    prompts: ['Fresher engineer pitch', 'Career change intro', 'Campus placement intro', 'Remote job intro']
+  },
+  gd: {
+    title: 'Group Discussion Practice',
+    desc: 'Articulate your views on current topics. Focus on structure, examples, and polite disagreement.',
+    prompts: ['AI replacing jobs', 'Work from home vs office', 'Women in tech', 'Social media impact']
+  },
+  hr: {
+    title: 'General HR Interview',
+    desc: 'Practice behavioral questions on motivation, teamwork, leadership, and conflict resolution.',
+    prompts: ['Tell me about yourself', 'Greatest weakness', 'Where do you see yourself in 5 years?', 'Why this company?']
+  },
+  tech: {
+    title: 'Technical HR Communication',
+    desc: 'Explain your projects, tech decisions, and failures clearly for non-technical interviewers.',
+    prompts: ['Describe your final year project', 'Biggest technical challenge', 'Tech stack choices', 'Bug you fixed']
+  },
+  email: {
+    title: 'Professional Email Writing',
+    desc: 'Practice writing clear, professional emails for workplace scenarios.',
+    prompts: ['Follow-up after interview', 'Requesting leave', 'Project update to manager', 'Offer negotiation email']
+  }
+};
 
-    // Remove active class
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    event.target.classList.add("active");
+function changeCategory(cat, el) {
+  currentCat = cat;
+  document.querySelectorAll('.tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+  el.classList.add('active');
+  el.setAttribute('aria-selected','true');
 
-    if(type === "gd"){
-        content.innerHTML = `
-        <div class="left">
-            <h2>Group Discussion Practice</h2>
-            <p>Practice articulating your views on GD topics</p>
-            <p><b>Random Topic</b></p>
-            <input placeholder="Or enter a specific GD topic...">
-        </div>
-        <button class="btn">Generate</button>
-        `;
-    }
+  const c = categories[cat];
+  document.getElementById('mod-title').innerText = c.title;
+  document.getElementById('mod-desc').innerText = c.desc;
+  document.getElementById('practice-input').value = '';
+  document.getElementById('practice-input').placeholder = `Type or speak your ${cat === 'email' ? 'email' : 'response'} here…`;
+  document.getElementById('feedback-section').classList.remove('active');
 
-    else if(type === "tech"){
-        content.innerHTML = `
-        <div class="left">
-            <h2>Technical HR Interview</h2>
-            <p>Practice HR questions with a technical angle — project experience, problem-solving, and decisions</p>
-        </div>
-        <button class="btn">Start Practice</button>
-        `;
-    }
-
-    else if(type === "hr"){
-        content.innerHTML = `
-        <div class="left">
-            <h2>General HR Interview</h2>
-            <p>Practice behavioral & personality questions — motivation, teamwork, leadership, career goals</p>
-        </div>
-        <button class="btn">Start Practice</button>
-        `;
-    }
-
-    else if(type === "role"){
-        content.innerHTML = `
-        <div class="left">
-            <h2>Role-Specific Communication</h2>
-            <p>Practice explaining, persuading, and pitching for your target role</p>
-        </div>
-        <button class="btn">Start</button>
-        `;
-    }
-
-    else if(type === "email"){
-        content.innerHTML = `
-        <div class="left">
-            <h2>Professional Email Writing</h2>
-            <p>Practice writing professional emails for workplace scenarios</p>
-        </div>
-        <button class="btn">Start Practice</button>
-        `;
-    }
-
-    else if(type === "presentation"){
-        content.innerHTML = `
-        <div class="left">
-            <h2>Presentation & Public Speaking</h2>
-            <p>Structure compelling presentations and practice delivery</p>
-        </div>
-        <button class="btn">Start Practice</button>
-        `;
-    }
-
-    else{
-        content.innerHTML = `
-        <div class="left">
-            <h2>Self Introduction Practice</h2>
-            <p>Practice introducing yourself for different interview scenarios</p>
-        </div>
-        <button class="btn">Start Practice</button>
-        `;
-    }
+  // Chips
+  document.getElementById('prompt-chips').innerHTML = c.prompts.map(p =>
+    `<button class="chip" onclick="fillPrompt('${p}')">${p}</button>`).join('');
 }
-</script>
 
+function fillPrompt(text) {
+  document.getElementById('practice-input').placeholder = `Responding to: "${text}" — type or speak below`;
+}
+
+function toggleVoice() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) { alert('Voice input requires Chrome browser.'); return; }
+
+  if (voiceActive) {
+    stopVoice();
+  } else {
+    startVoice();
+  }
+}
+
+function startVoice() {
+  recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = 'en-IN';
+
+  let base = document.getElementById('practice-input').value;
+
+  recognition.onstart = () => {
+    voiceActive = true;
+    document.getElementById('mic-toggle').classList.add('active');
+    document.getElementById('mic-toggle').innerText = '⏹️ Stop Voice';
+    document.getElementById('mic-status').innerText = 'Listening… speak now';
+  };
+
+  recognition.onresult = e => {
+    let final = '';
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
+      else interim += e.results[i][0].transcript;
+    }
+    base += final;
+    document.getElementById('practice-input').value = base + interim;
+  };
+
+  recognition.onend = () => {
+    if (voiceActive) recognition.start();
+  };
+
+  recognition.start();
+}
+
+function stopVoice() {
+  voiceActive = false;
+  if (recognition) { try { recognition.stop(); } catch(e){} }
+  document.getElementById('mic-toggle').classList.remove('active');
+  document.getElementById('mic-toggle').innerText = '🎤 Voice Input';
+  document.getElementById('mic-status').innerText = 'Click to speak your answer';
+}
+
+async function evaluateResponse() {
+  const text = document.getElementById('practice-input').value.trim();
+  const btn = document.getElementById('eval-btn');
+  if (!text) { alert('Please enter a response.'); return; }
+
+  stopVoice();
+  btn.innerText = 'Analysing…'; btn.disabled = true;
+
+  try {
+    const res = await fetch(`${API}/api/speech/analyze`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ question: categories[currentCat].title, transcript: text, category: currentCat })
+    });
+    const data = await res.json();
+    renderFeedback(data);
+  } catch(e) {
+    // Fallback
+    const wc = text.split(' ').length;
+    const score = Math.min(10, Math.max(1, Math.round(wc / 10)));
+    renderFeedback({
+      score, clarity_score: score, confidence_score: Math.max(1,score-1), relevance_score: score,
+      filler_words_found: [],
+      overall_feedback: 'Backend offline — basic scoring. Run FastAPI for full Gemini analysis.',
+      strengths: ['Attempted the response'], improvements: ['Enable backend for AI feedback'],
+      ideal_answer_hint: 'Use the STAR method for structured answers.'
+    });
+  } finally {
+    btn.innerText = '🧠 Evaluate Response'; btn.disabled = false;
+  }
+}
+
+function renderFeedback(data) {
+  document.getElementById('fb-score').innerText  = data.score + '/10';
+  document.getElementById('fb-clarity').innerText = data.clarity_score + '/10';
+  document.getElementById('fb-conf').innerText    = data.confidence_score + '/10';
+  document.getElementById('fb-rel').innerText     = data.relevance_score + '/10';
+  document.getElementById('fb-main').innerText    = data.overall_feedback;
+
+  if (data.filler_words_found && data.filler_words_found.length > 0) {
+    document.getElementById('filler-warn').style.display = 'block';
+    document.getElementById('filler-list').innerText = data.filler_words_found.join(', ');
+  } else {
+    document.getElementById('filler-warn').style.display = 'none';
+  }
+
+  document.getElementById('fb-str').innerHTML = (data.strengths||[]).map(s=>`<li>${s}</li>`).join('');
+  document.getElementById('fb-imp').innerHTML = (data.improvements||[]).map(s=>`<li>${s}</li>`).join('');
+  document.getElementById('fb-hint').innerHTML = '<strong>💡 Hint:</strong> ' + (data.ideal_answer_hint || '');
+  document.getElementById('feedback-section').classList.add('active');
+}
+
+// Init chips
+changeCategory('self', document.querySelector('.tab.active'));
+</script>
 </body>
 </html>

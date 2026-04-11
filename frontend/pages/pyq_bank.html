@@ -3,315 +3,334 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Company PYQ Bank</title>
-
+<title>PrepTalk - Company PYQ Bank</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+:root {
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --bg-main: #f1f5f9;
+  --bg-card: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
 }
 
 body {
-  background: #f5f6fa;
-}
-
-.container {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
   display: flex;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Sidebar */
 .sidebar {
-  width: 240px;
-  background: #fff;
-  height: 100vh;
-  padding: 20px;
-  border-right: 1px solid #ddd;
+  width: 250px;
+  background: var(--bg-card);
+  padding: 1.5rem;
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
 }
 
 .logo {
-  font-weight: bold;
-  margin-bottom: 20px;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--primary);
+  margin-bottom: 2rem;
+  letter-spacing: -0.5px;
 }
 
 .menu a {
   display: block;
-  padding: 10px;
+  padding: 0.75rem 1rem;
   border-radius: 8px;
-  color: #444;
+  color: var(--text-muted);
   text-decoration: none;
-  margin-bottom: 5px;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  transition: all 0.2s;
   cursor: pointer;
 }
 
-.menu a.active,
-.menu a:hover {
-  background: #e6e9ff;
-  color: #4a6cff;
+.menu a:hover, .menu a.active {
+  background: #eef2ff;
+  color: var(--primary);
 }
 
 .section {
-  margin: 15px 0 5px;
-  font-size: 12px;
-  color: #888;
+  margin: 1.5rem 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 1px;
 }
 
-/* Main */
+/* Main Content */
 .main {
   flex: 1;
-  padding: 30px;
+  padding: 2.5rem;
+  overflow-y: auto;
 }
 
-/* Title */
-.title h1 {
-  margin-bottom: 5px;
+.header-inner h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
 }
 
-.title p {
-  color: #777;
-  margin-bottom: 20px;
+.header-inner p {
+  color: var(--text-muted);
+  margin-bottom: 2rem;
 }
 
-/* Search */
 .search-box {
   display: flex;
-  background: #fff;
-  padding: 10px;
+  background: var(--bg-card);
+  padding: 0.5rem;
   border-radius: 12px;
-  border: 1px solid #ddd;
-  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  margin-bottom: 2rem;
+  max-width: 600px;
 }
 
 .search-box input {
   flex: 1;
   border: none;
   outline: none;
-  padding: 10px;
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-size: 1rem;
 }
 
 .search-box button {
-  background: #7a4fff;
+  background: var(--primary);
   border: none;
   color: white;
-  padding: 10px 15px;
+  padding: 0.5rem 1.5rem;
   border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
 }
 
-/* Tabs */
-.tabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+.search-box button:hover {
+  background: var(--primary-hover);
 }
 
-.tab {
-  padding: 8px 15px;
-  background: #fff;
-  border-radius: 20px;
-  cursor: pointer;
-  border: 1px solid #ddd;
-}
-
-.tab.active {
-  background: #e6e9ff;
-  color: #4a6cff;
-}
-
-/* Cards */
+/* Cards Grid */
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
 }
 
 .card {
-  background: #fff;
-  padding: 20px;
+  background: var(--bg-card);
+  padding: 1.5rem;
   border-radius: 12px;
-  transition: 0.3s;
+  border: 1px solid var(--border);
   cursor: pointer;
-  border: 1px solid #eee;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 20px -8px rgba(0,0,0,0.1);
+  border-color: var(--primary);
 }
 
-.icon {
-  font-size: 30px;
-  margin-bottom: 10px;
+.card .icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
 .card h3 {
-  margin-bottom: 5px;
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
 }
 
 .card p {
-  font-size: 13px;
-  color: #777;
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
+
+/* Modal for Questions */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 50;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  width: 90%;
+  max-width: 600px;
+  border-radius: 16px;
+  padding: 2rem;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+}
+
+.question-list {
+  list-style: none;
+  margin-top: 1.5rem;
+}
+
+.question-list li {
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+
+.loader {
+  display: none;
+  text-align: center;
+  margin: 2rem 0;
+  color: var(--primary);
+  font-weight: 600;
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="container">
-
-  <!-- Sidebar -->
   <aside class="sidebar">
-    <h2 class="logo">PREPTALK</h2>
-
+    <div class="logo">PrepTalk</div>
     <div class="menu">
-      <a>Text Interview</a>
-      <a>Voice Interview</a>
-      <a>Video Interview</a>
-      <a>AI Coach</a>
-
-      <p class="section">COMMUNICATION</p>
-      <a>Self Introduction</a>
-
       <p class="section">PRACTICE</p>
-      <a>Aptitude</a>
       <a class="active">Company PYQs</a>
-
-      <p class="section">LEARNING</p>
-      <a>Learning Hub</a>
-      <a>AI Roadmap</a>
-      <a>Training Plan</a>
-      <a>Python</a>
+      <p class="section">COMMUNICATION</p>
+      <a href="comm_hub.html">Communication Hub</a>
     </div>
   </aside>
 
-  <!-- Main -->
   <main class="main">
-
-    <div class="title">
+    <div class="header-inner">
       <h1>Company PYQ Bank</h1>
-      <p>Practice previous year questions from top companies — scraped from real sources with direct links</p>
+      <p>Practice previous year questions from top companies — fetched directly from real sources via Firecrawl.</p>
     </div>
 
-    <!-- Search -->
     <div class="search-box">
-      <input type="text" id="search" placeholder="Search any company...">
-      <button onclick="searchCompany()">Go</button>
+      <input type="text" id="search" placeholder="Search any company..." onkeyup="filterCompanies()">
+      <button onclick="filterCompanies()">Search</button>
     </div>
 
-    <!-- Tabs -->
-    <div class="tabs">
-      <div class="tab active" onclick="switchTab(this)">Indian Companies</div>
-      <div class="tab" onclick="switchTab(this)">Global Companies</div>
-    </div>
-
-    <!-- Cards -->
     <div class="grid" id="companyGrid">
-
-      <div class="card" data-name="tcs">
-        <div class="icon">🏢</div>
-        <h3>TCS</h3>
-        <p>India's largest IT services company</p>
+      <div class="card" onclick="fetchQuestions('TCS')">
+        <div class="icon">🏢</div><h3>TCS</h3><p>IT Services</p>
       </div>
-
-      <div class="card" data-name="infosys">
-        <div class="icon">🔷</div>
-        <h3>Infosys</h3>
-        <p>Global leader in digital services</p>
+      <div class="card" onclick="fetchQuestions('Infosys')">
+        <div class="icon">🔷</div><h3>Infosys</h3><p>Digital Services</p>
       </div>
-
-      <div class="card" data-name="wipro">
-        <div class="icon">🌸</div>
-        <h3>Wipro</h3>
-        <p>Leading global IT consulting company</p>
+      <div class="card" onclick="fetchQuestions('Wipro')">
+        <div class="icon">🌸</div><h3>Wipro</h3><p>Consulting</p>
       </div>
-
-      <div class="card" data-name="hcl">
-        <div class="icon">⚡</div>
-        <h3>HCL Technologies</h3>
-        <p>Technology and IT enterprise</p>
+      <div class="card" onclick="fetchQuestions('Amazon')">
+        <div class="icon">📦</div><h3>Amazon</h3><p>E-commerce / Cloud</p>
       </div>
-
-      <div class="card" data-name="tech mahindra">
-        <div class="icon">🔴</div>
-        <h3>Tech Mahindra</h3>
-        <p>Digital transformation specialist</p>
+      <div class="card" onclick="fetchQuestions('Google')">
+        <div class="icon">🔍</div><h3>Google</h3><p>Tech / Search</p>
       </div>
-
-      <div class="card" data-name="cognizant">
-        <div class="icon">🟦</div>
-        <h3>Cognizant</h3>
-        <p>Professional services & solutions</p>
+      <div class="card" onclick="fetchQuestions('Microsoft')">
+        <div class="icon">💻</div><h3>Microsoft</h3><p>Software / Tech</p>
       </div>
-
-      <div class="card" data-name="accenture">
-        <div class="icon">▶️</div>
-        <h3>Accenture India</h3>
-        <p>Global professional services leader</p>
-      </div>
-
-      <div class="card" data-name="capgemini">
-        <div class="icon">🔵</div>
-        <h3>Capgemini India</h3>
-        <p>Consulting & technology services</p>
-      </div>
-
-      <div class="card" data-name="zoho">
-        <div class="icon">🟢</div>
-        <h3>Zoho</h3>
-        <p>SaaS products & cloud solutions</p>
-      </div>
-
-      <div class="card" data-name="freshworks">
-        <div class="icon">🟠</div>
-        <h3>Freshworks</h3>
-        <p>Modern SaaS company</p>
-      </div>
-
-      <div class="card" data-name="flipkart">
-        <div class="icon">🛒</div>
-        <h3>Flipkart</h3>
-        <p>India's largest e-commerce marketplace</p>
-      </div>
-
-      <div class="card" data-name="phonepe">
-        <div class="icon">💜</div>
-        <h3>PhonePe</h3>
-        <p>Digital payments & fintech leader</p>
-      </div>
-
     </div>
-
   </main>
 
-</div>
+  <div class="modal-overlay" id="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <h2 id="modal-title">Questions</h2>
+      <div class="loader" id="loader">Crawling questions via Firecrawl...</div>
+      <ul class="question-list" id="q-list"></ul>
+    </div>
+  </div>
 
 <script>
-// Sidebar active
-document.querySelectorAll(".menu a").forEach(item => {
-  item.addEventListener("click", () => {
-    document.querySelectorAll(".menu a").forEach(el => el.classList.remove("active"));
-    item.classList.add("active");
-  });
-});
-
-// Search
-function searchCompany() {
-  let input = document.getElementById("search").value.toLowerCase();
-  let cards = document.querySelectorAll(".card");
-
+function filterCompanies() {
+  const query = document.getElementById('search').value.toLowerCase();
+  const cards = document.querySelectorAll('.card');
   cards.forEach(card => {
-    let name = card.getAttribute("data-name");
-    card.style.display = name.includes(input) ? "block" : "none";
+    const text = card.innerText.toLowerCase();
+    card.style.display = text.includes(query) ? 'block' : 'none';
   });
 }
 
-// Tabs
-function switchTab(el) {
-  document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
-  el.classList.add("active");
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+}
 
-  alert("Switched to " + el.innerText);
+async function fetchQuestions(company) {
+  const modal = document.getElementById('modal');
+  const loader = document.getElementById('loader');
+  const qList = document.getElementById('q-list');
+  const mTitle = document.getElementById('modal-title');
+  
+  modal.classList.add('active');
+  mTitle.innerText = `Interview Questions: ${company}`;
+  qList.innerHTML = '';
+  loader.style.display = 'block';
+
+  try {
+    const res = await fetch(`http://localhost:8000/api/practice/pyq/${company}`);
+    const result = await res.json();
+    loader.style.display = 'none';
+
+    let html = '';
+    // Expected structure: result.data.questions (array) or from firecrawl extraction schema
+    if (result.data && result.data.questions) {
+      result.data.questions.forEach(q => {
+        html += `<li>${q}</li>`;
+      });
+    } else if (result.data && result.data.data && result.data.data.extract) {
+       // firecrawl extract object
+       const textExt = JSON.stringify(result.data.data.extract);
+       html += `<li>${textExt}</li>`;
+    } else {
+       html += `<li>Could not parse questions properly. Found: ${JSON.stringify(result.data)}</li>`;
+    }
+    qList.innerHTML = html;
+  } catch(e) {
+    loader.style.display = 'none';
+    qList.innerHTML = `<li>Error connecting to Backend. Ensure it's running on localhost:8000</li>`;
+    console.error(e);
+  }
 }
 </script>
 

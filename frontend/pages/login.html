@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrepTalk — AI-Powered Interview Training Platform</title>
+<meta name="description" content="Practice realistic interview scenarios and get AI-powered feedback on communication, confidence, and technical skills. From beginner to interview-ready.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#4f46e5;--primary-light:#ede9fe;--accent:#6366f1;
+  --purple:#7c3aed;--bg:#f1f5f9;--white:#ffffff;
+  --text:#0f172a;--muted:#64748b;--border:#e2e8f0;
+  --card:#ffffff;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+
+/* ── NAV ───────────────────────────────────────── */
+nav{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;padding:0 3rem;height:64px;}
+.nav-logo{display:flex;align-items:center;gap:.5rem;font-weight:800;font-size:1.1rem;letter-spacing:.5px;color:var(--text);text-decoration:none;}
+.nav-logo .dot{width:24px;height:24px;background:linear-gradient(135deg,var(--primary),var(--purple));border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#fff;}
+.nav-right{display:flex;align-items:center;gap:1rem;}
+.nav-link{font-size:.88rem;font-weight:500;color:var(--muted);text-decoration:none;transition:color .2s;}
+.nav-link:hover{color:var(--primary);}
+.btn{padding:.6rem 1.4rem;border-radius:8px;font-weight:600;font-size:.88rem;cursor:pointer;border:none;transition:all .2s;font-family:'Inter',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-primary:hover{background:#4338ca;transform:translateY(-1px);box-shadow:0 6px 20px rgba(79,70,229,.3);}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border);}
+.btn-ghost:hover{background:var(--bg);}
+
+/* ── HERO ──────────────────────────────────────── */
+.hero{text-align:center;padding:5rem 2rem 4rem;max-width:700px;margin:0 auto;}
+.ai-badge{display:inline-flex;align-items:center;gap:.4rem;background:var(--primary-light);color:var(--primary);
+  font-size:.78rem;font-weight:700;padding:.35rem .9rem;border-radius:99px;margin-bottom:1.75rem;
+  border:1px solid rgba(79,70,229,.2);}
+.ai-badge::before{content:"✨";}
+.hero h1{font-size:3rem;font-weight:900;line-height:1.15;margin-bottom:.75rem;letter-spacing:-1px;}
+.hero h1 span{color:var(--primary);}
+.hero .sub{font-size:1.05rem;color:var(--muted);line-height:1.65;max-width:520px;margin:0 auto 2.25rem;}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.btn-lg{padding:.85rem 2rem;font-size:1rem;border-radius:10px;}
+
+/* ── STATS ─────────────────────────────────────── */
+.stats-wrap{background:var(--white);border:1px solid var(--border);border-radius:16px;
+  display:flex;max-width:640px;margin:0 auto 5rem;overflow:hidden;}
+.stat-item{flex:1;text-align:center;padding:1.5rem 1rem;position:relative;}
+.stat-item:not(:last-child)::after{content:"";position:absolute;right:0;top:20%;height:60%;
+  width:1px;background:var(--border);}
+.stat-item .val{font-size:1.75rem;font-weight:800;color:var(--text);}
+.stat-item .lbl{font-size:.77rem;color:var(--muted);font-weight:500;margin-top:.2rem;}
+
+/* ── SECTION WRAPPER ───────────────────────────── */
+section{max-width:1100px;margin:0 auto;padding:4rem 2rem;}
+.sec-title{text-align:center;margin-bottom:.6rem;}
+.sec-title h2{font-size:1.75rem;font-weight:800;letter-spacing:-.5px;}
+.sec-sub{text-align:center;color:var(--muted);font-size:.95rem;margin-bottom:3rem;}
+
+/* ── HOW IT WORKS ──────────────────────────────── */
+.steps{display:flex;gap:0;justify-content:center;flex-wrap:wrap;}
+.step{flex:1;min-width:180px;max-width:220px;text-align:center;padding:0 1rem;position:relative;}
+.step:not(:last-child)::after{content:"";position:absolute;top:24px;right:-20px;width:40px;height:2px;
+  background:linear-gradient(90deg,var(--primary),var(--accent));opacity:.35;}
+.step-num{width:48px;height:48px;border-radius:50%;background:var(--primary);color:#fff;
+  font-size:.95rem;font-weight:800;display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1rem;}
+.step h3{font-size:.95rem;font-weight:700;margin-bottom:.4rem;}
+.step p{font-size:.82rem;color:var(--muted);line-height:1.5;}
+
+/* ── FEATURE GRID ──────────────────────────────── */
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:0;}
+.feat-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.25rem;
+  transition:all .2s;cursor:default;}
+.feat-card:hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:0 8px 24px rgba(79,70,229,.1);}
+.feat-icon{width:36px;height:36px;border-radius:8px;background:var(--primary-light);
+  display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:.85rem;}
+.feat-card h4{font-size:.9rem;font-weight:700;margin-bottom:.35rem;}
+.feat-card p{font-size:.8rem;color:var(--muted);line-height:1.5;}
+
+/* ── ROLES ─────────────────────────────────────── */
+.roles-section{text-align:center;padding:4rem 2rem;}
+.role-tags{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;max-width:700px;margin:0 auto;}
+.role-tag{padding:.5rem 1.1rem;border:1px solid var(--border);border-radius:99px;font-size:.83rem;
+  font-weight:600;color:var(--muted);background:var(--white);display:flex;align-items:center;
+  gap:.4rem;transition:all .2s;cursor:default;}
+.role-tag:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light);}
+.role-tag::before{content:"○";font-size:.6rem;}
+
+/* ── CTA BANNER ────────────────────────────────── */
+.cta-banner{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 60%,#9333ea 100%);
+  border-radius:20px;padding:3.5rem 2rem;text-align:center;margin:0 2rem 5rem;max-width:1100px;
+  margin-left:auto;margin-right:auto;}
+.cta-banner h2{color:#fff;font-size:1.75rem;font-weight:800;margin-bottom:.65rem;}
+.cta-banner p{color:rgba(255,255,255,.75);font-size:.95rem;margin-bottom:2rem;}
+.btn-white{background:#fff;color:var(--primary);font-weight:700;}
+.btn-white:hover{background:#f1f5f9;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.15);}
+
+/* ── FOOTER ────────────────────────────────────── */
+footer{border-top:1px solid var(--border);text-align:center;padding:1.5rem;
+  font-size:.8rem;color:var(--muted);}
+footer a{color:var(--primary);text-decoration:none;font-weight:600;}
+
+/* ── AUTH MODAL ────────────────────────────────── */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:200;
+  display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:#fff;border-radius:20px;padding:2.5rem;width:100%;max-width:400px;
+  position:relative;box-shadow:0 24px 60px rgba(0,0,0,.2);animation:slideUp .25s ease;}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.modal-close{position:absolute;top:1rem;right:1.25rem;background:none;border:none;
+  font-size:1.25rem;cursor:pointer;color:var(--muted);}
+.modal h2{font-size:1.4rem;font-weight:800;margin-bottom:.35rem;}
+.modal .modal-sub{color:var(--muted);font-size:.88rem;margin-bottom:1.75rem;}
+.form-group{margin-bottom:1rem;}
+.form-group label{display:block;font-size:.78rem;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.6px;margin-bottom:.4rem;}
+.form-group input{width:100%;padding:.75rem 1rem;border:1px solid var(--border);border-radius:10px;
+  font-family:'Inter',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s;}
+.form-group input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.1);}
+.btn-full{width:100%;padding:.85rem;font-size:.95rem;border-radius:10px;margin-top:.5rem;}
+.modal-switch{text-align:center;font-size:.85rem;color:var(--muted);margin-top:1.25rem;}
+.modal-switch a{color:var(--primary);font-weight:600;cursor:pointer;text-decoration:none;}
+.divider-line{display:flex;align-items:center;gap:.75rem;margin:1.25rem 0;color:var(--muted);font-size:.82rem;}
+.divider-line::before,.divider-line::after{content:"";flex:1;height:1px;background:var(--border);}
+.btn-google{background:#fff;border:1px solid var(--border);color:var(--text);width:100%;
+  justify-content:center;padding:.8rem;}
+.btn-google:hover{background:var(--bg);}
+
+@media(max-width:900px){.feat-grid{grid-template-columns:repeat(2,1fr);}
+  .steps{flex-direction:column;align-items:center;}.step::after{display:none;}
+  nav{padding:0 1.5rem;}}
+@media(max-width:600px){.hero h1{font-size:2rem;}.stats-wrap{flex-direction:column;}
+  .stat-item::after{display:none;}.feat-grid{grid-template-columns:1fr;}}
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+
+    <!-- Sign In view -->
+    <div id="view-signin">
+      <h2>Welcome back 👋</h2>
+      <p class="modal-sub">Sign in to continue your interview prep.</p>
+      
+      <button class="btn btn-google btn-full" style="margin-bottom:0;" onclick="googleSignUp()">
+        <img src="https://www.google.com/favicon.ico" width="16" style="border-radius:2px"> Continue with Google
+      </button>
+
+      <div class="divider-line">or sign in with email</div>
+      <div class="form-group">
+        <label>Email</label>
+
+        <input type="email" id="si-email" placeholder="you@email.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="si-pass" placeholder="••••••••">
+      </div>
+      <button class="btn btn-primary btn-full" onclick="signIn()">Sign In →</button>
+      <div class="modal-switch">New here? <a onclick="showSignUp()">Create a free account</a></div>
+    </div>
+
+    <!-- Sign Up view -->
+    <div id="view-signup" style="display:none;">
+      <h2>Create your account ✨</h2>
+      <p class="modal-sub">Free forever — no credit card required.</p>
+      
+      <button class="btn btn-google btn-full" style="margin-bottom:0;" onclick="googleSignUp()">
+        <img src="https://www.google.com/favicon.ico" width="16" style="border-radius:2px"> Continue with Google
+      </button>
+
+      <div class="divider-line">or sign up with email</div>
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="su-name" placeholder="Aarav Kumar">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="su-email" placeholder="you@email.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="su-pass" placeholder="Min 8 characters">
+      </div>
+      <button class="btn btn-primary btn-full" onclick="signUp()">Get Started Free →</button>
+      <div class="modal-switch">Already have an account? <a onclick="showSignIn()">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="/pages/login.html">
+    <div class="dot">P</div>
+    PREPTALK
+  </a>
+  <div class="nav-right">
+    <a class="nav-link" href="#how-it-works">How It Works</a>
+    <a class="nav-link" href="#features">Features</a>
+    <a class="nav-link" href="#roles">Roles</a>
+    <button class="btn btn-ghost" onclick="openModal('signin')">Sign In</button>
+    <button class="btn btn-primary" onclick="openModal('signup')">Get Started Free</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="ai-badge">AI-Powered Interview Coach</div>
+  <h1>Train for Interviews<br><span>with Your AI Coach</span></h1>
+  <p class="sub">Practice realistic scenarios and get AI-powered feedback on communication, confidence, and technical skills. From beginner to interview-ready.</p>
+  <div class="hero-btns">
+    <button class="btn btn-primary btn-lg" onclick="openModal('signup')">Start Practice →</button>
+    <a class="btn btn-ghost btn-lg" href="#features">Explore Features</a>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-wrap">
+  <div class="stat-item"><div class="val">10+</div><div class="lbl">Target Roles</div></div>
+  <div class="stat-item"><div class="val">4</div><div class="lbl">Interview Types</div></div>
+  <div class="stat-item"><div class="val">15+</div><div class="lbl">Company PYQs</div></div>
+  <div class="stat-item"><div class="val">AI</div><div class="lbl">Powered Analysis</div></div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+  <div class="sec-title"><h2>How It Works</h2></div>
+  <p class="sec-sub">Four simple steps to interview readiness</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>Upload Resume</h3>
+      <p>Get your skills analysed and ATS score to identify gaps.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>Choose Your Path</h3>
+      <p>Pick role, interview type, and difficulty level.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>Practice & Improve</h3>
+      <p>AI asks questions tailored to your experience live.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <h3>Get Feedback</h3>
+      <p>Detailed report with strengths, improvements & tips.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" style="background:transparent;padding-top:1rem;">
+  <div class="sec-title"><h2>Everything You Need</h2></div>
+  <p class="sec-sub">Comprehensive tools for complete interview preparation</p>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-icon">📄</div>
+      <h4>Resume-Aware Interviews</h4>
+      <p>Questions tailored to your experience and skills.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🎯</div>
+      <h4>Role-Specific Training</h4>
+      <p>Practice for SWE, DS, PM, ML Engineer, DevOps & more.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📊</div>
+      <h4>AI Feedback Reports</h4>
+      <p>Radar charts and score breakdowns for every session.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🎤</div>
+      <h4>Voice Practice Mode</h4>
+      <p>Practice answering with your voice for realism.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🧠</div>
+      <h4>Aptitude & Company Prep</h4>
+      <p>PYQs from TCS, Infosys, Google, Amazon & 15+ companies.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">✅</div>
+      <h4>ATS Resume Scoring</h4>
+      <p>Keyword analysis and formatting tips for ATS.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🤖</div>
+      <h4>AI Training Plans</h4>
+      <p>Personalised weekly schedules based on weaknesses.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">👁️</div>
+      <h4>Interviewer Perspective</h4>
+      <p>See how recruiters evaluate you with radar charts.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ROLES -->
+<section id="roles" class="roles-section" style="padding:2rem 2rem 3rem;">
+  <div class="sec-title"><h2>Prepare for Any Role</h2></div>
+  <p class="sec-sub">Role-specific practice for top job positions</p>
+  <div class="role-tags">
+    <span class="role-tag">Software Engineer</span>
+    <span class="role-tag">Frontend Developer</span>
+    <span class="role-tag">Backend Developer</span>
+    <span class="role-tag">Full Stack Developer</span>
+    <span class="role-tag">Data Scientist</span>
+    <span class="role-tag">ML Engineer</span>
+    <span class="role-tag">Product Manager</span>
+    <span class="role-tag">UI/UX Designer</span>
+    <span class="role-tag">Business Analyst</span>
+    <span class="role-tag">DevOps Engineer</span>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-banner">
+  <h2>Ready to Ace Your Next Interview?</h2>
+  <p>Join thousands of students preparing smarter with AI-powered coaching.</p>
+  <button class="btn btn-white btn-lg" onclick="openModal('signup')">✨ Start Practising Free</button>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  © 2026 PREPTALK — AI-Powered Interview Training Platform ·
+  <a href="/pages/dashboard.html">Dashboard</a> ·
+  <a href="/pages/live_mock.html">Start Interview</a>
+</footer>
+
+<script>
+function openModal(view) {
+  document.getElementById('auth-modal').classList.add('open');
+  if (view === 'signup') showSignUp(); else showSignIn();
+}
+function closeModal() {
+  document.getElementById('auth-modal').classList.remove('open');
+}
+document.getElementById('auth-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+function showSignIn()  { document.getElementById('view-signin').style.display='block'; document.getElementById('view-signup').style.display='none'; }
+function showSignUp()  { document.getElementById('view-signup').style.display='block'; document.getElementById('view-signin').style.display='none'; }
+
+function clearAllData() {
+  if (confirm('This will delete all local data including streaks and progress. Are you sure?')) {
+    localStorage.clear();
+    window.location.href = '/pages/login.html';
+  }
+}
+
+let googleClient;
+
+window.onload = function() {
+  // Initialize Google API Client for Custom Button Flow
+  googleClient = google.accounts.oauth2.initTokenClient({
+    client_id: 'YOUR_GOOGLE_CLIENT_ID_HERE.apps.googleusercontent.com',
+    scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+    callback: async (tokenResponse) => {
+      if (tokenResponse && tokenResponse.access_token) {
+        try {
+          // 1. Fetch user's Google Profile
+          const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+          }).then(res => res.json());
+          
+          // 2. Send to PrepTalk backend to register/login
+          const res = await fetch('/api/auth/google', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ name: userInfo.name, email: userInfo.email })
+          });
+          const data = await res.json();
+          if (res.ok) {
+            localStorage.setItem('pt_user', JSON.stringify(data.user));
+            window.location.href = '/pages/dashboard.html';
+          } else {
+            alert(data.detail || "Google authentication failed in backend");
+          }
+        } catch (e) {
+          console.error(e);
+          alert("Error fetching Google profile or storing in DB.");
+        }
+      }
+    }
+  });
+};
+
+function googleSignUp() {
+  if (googleClient) {
+    googleClient.requestAccessToken(); // This opens the Google account selection popup
+  } else {
+    alert("Google Auth is not fully loaded. Note: Ensure you replaced YOUR_GOOGLE_CLIENT_ID_HERE in the code.");
+  }
+}
+
+async function signIn() {
+  const email = document.getElementById('si-email').value.trim();
+  const pass  = document.getElementById('si-pass').value.trim();
+  if (!email || !pass) { alert('Please fill in all fields.'); return; }
+  
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ email, password: pass })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      localStorage.setItem('pt_user', JSON.stringify(data.user));
+      window.location.href = '/pages/dashboard.html';
+    } else {
+      alert(data.detail || "Sign in failed");
+    }
+  } catch (e) {
+    alert("Backend connection error.");
+  }
+}
+
+async function signUp() {
+  const name  = document.getElementById('su-name').value.trim();
+  const email = document.getElementById('su-email').value.trim();
+  const pass  = document.getElementById('su-pass').value.trim();
+  if (!name || !email || !pass) { alert('Please fill in all fields.'); return; }
+  if (pass.length < 8) { alert('Password must be at least 8 characters.'); return; }
+  
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ name, email, password: pass })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      localStorage.setItem('pt_user', JSON.stringify(data.user));
+      window.location.href = '/pages/dashboard.html';
+    } else {
+      alert(data.detail || "Sign up failed");
+    }
+  } catch (e) {
+    alert("Backend connection error.");
+  }
+}
+
+// Allow Enter key in forms
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (document.getElementById('view-signin').style.display !== 'none') signIn();
+    else signUp();
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrepTalk – My Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--primary:#4f46e5;--primary-light:#ede9fe;--success:#10b981;--warn:#f59e0b;--danger:#ef4444;--bg:#f8fafc;--card:#fff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+.pt-main{flex:1;overflow-y:auto;}
+.wrap{max-width:1000px;margin:0 auto;padding:2rem 2.5rem;}
+
+/* Hero card */
+.profile-hero{background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:20px;padding:2.5rem;
+  display:flex;gap:2rem;align-items:center;margin-bottom:1.75rem;color:#fff;position:relative;overflow:hidden;}
+.profile-hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;
+  border-radius:50%;background:rgba(255,255,255,.07);}
+.avatar-ring{width:88px;height:88px;border-radius:50%;background:rgba(255,255,255,.2);
+  border:3px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;
+  font-size:2.5rem;flex-shrink:0;}
+.hero-info h1{font-size:1.6rem;font-weight:800;margin-bottom:.25rem;}
+.hero-info .email{opacity:.75;font-size:.9rem;margin-bottom:.85rem;}
+.hero-badges{display:flex;gap:.5rem;flex-wrap:wrap;}
+.badge{padding:.3rem .8rem;border-radius:99px;font-size:.75rem;font-weight:700;
+  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);}
+.hero-actions{margin-left:auto;display:flex;flex-direction:column;gap:.6rem;z-index:1;}
+.btn{padding:.65rem 1.35rem;border:none;border-radius:10px;font-weight:700;font-size:.85rem;cursor:pointer;
+  font-family:'Inter',sans-serif;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;}
+.btn-white{background:#fff;color:var(--primary);}
+.btn-white:hover{background:#f1f5f9;}
+.btn-danger-outline{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3);}
+.btn-danger-outline:hover{background:rgba(239,68,68,.25);}
+
+/* Streak row */
+.streak-row{display:flex;gap:1rem;margin-bottom:1.75rem;}
+.streak-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.25rem 1.5rem;
+  display:flex;align-items:center;gap:1rem;flex:1;}
+.streak-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+.s-fire  {background:#fff7ed;}
+.s-medal {background:#f0fdf4;}
+.s-clock {background:#eff6ff;}
+.s-star  {background:#faf5ff;}
+.streak-info .val{font-size:1.75rem;font-weight:800;color:var(--text);}
+.streak-info .lbl{font-size:.75rem;color:var(--muted);font-weight:500;margin-top:.15rem;}
+
+/* Streak calendar */
+.calendar-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.75rem;}
+.calendar-card h3{font-size:1rem;font-weight:700;margin-bottom:1.25rem;}
+.cal-grid{display:flex;gap:3px;flex-wrap:wrap;}
+.cal-day{width:28px;height:28px;border-radius:6px;background:#f1f5f9;position:relative;cursor:default;
+  transition:transform .15s;}
+.cal-day:hover{transform:scale(1.15);}
+.cal-day.active{background:var(--primary);}
+.cal-day.today{outline:2px solid var(--primary);outline-offset:1px;}
+.cal-day.medium{background:#a5b4fc;}
+.cal-legend{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;font-size:.78rem;color:var(--muted);}
+.cal-legend span{width:14px;height:14px;border-radius:3px;display:inline-block;}
+
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.75rem;}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;}
+.stat-box h3{font-size:.9rem;font-weight:700;margin-bottom:1rem;color:var(--text);}
+
+/* Skill bars */
+.skill-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.65rem;}
+.skill-row .skill-name{width:90px;font-size:.82rem;color:var(--muted);font-weight:500;flex-shrink:0;}
+.skill-track{flex:1;height:8px;background:#f1f5f9;border-radius:99px;overflow:hidden;}
+.skill-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),#818cf8);}
+.skill-val{font-size:.78rem;color:var(--muted);width:30px;text-align:right;flex-shrink:0;}
+
+/* Recent activity */
+.activity-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.75rem;}
+.activity-item{display:flex;align-items:center;gap:1rem;padding:.75rem 0;border-bottom:1px solid var(--border);}
+.activity-item:last-child{border:none;}
+.act-icon{width:38px;height:38px;border-radius:10px;background:var(--primary-light);display:flex;
+  align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.act-info .title{font-size:.88rem;font-weight:600;}
+.act-info .sub{font-size:.78rem;color:var(--muted);}
+.act-score{margin-left:auto;font-size:1rem;font-weight:800;color:var(--primary);}
+.empty-state{text-align:center;padding:2rem;color:var(--muted);font-size:.9rem;}
+
+/* Danger Zone */
+.danger-card{background:#fff5f5;border:1px solid #fecaca;border-radius:14px;padding:1.5rem;}
+.danger-card h3{color:var(--danger);font-size:.95rem;font-weight:700;margin-bottom:.5rem;}
+.danger-card p{font-size:.85rem;color:var(--muted);margin-bottom:1rem;}
+.btn-danger{background:var(--danger);color:#fff;}
+.btn-danger:hover{background:#dc2626;}
+
+@media(max-width:700px){
+  .streak-row{flex-direction:column;}.stats-grid{grid-template-columns:1fr;}
+  .profile-hero{flex-direction:column;text-align:center;}.hero-actions{margin-left:0;flex-direction:row;flex-wrap:wrap;justify-content:center;}
+}
+</style>
+</head>
+<body>
+<script src="/static/js/nav.js"></script>
+<div class="pt-main">
+<div class="wrap">
+
+  <!-- Profile Hero -->
+  <div class="profile-hero" id="profile-hero">
+    <div class="avatar-ring" id="avatar-emoji">👤</div>
+    <div class="hero-info">
+      <h1 id="hero-name">Guest User</h1>
+      <div class="email" id="hero-email">guest@preptalk.ai</div>
+      <div class="hero-badges">
+        <span class="badge" id="badge-streak">🔥 0 Day Streak</span>
+        <span class="badge" id="badge-sessions">🎙️ 0 Sessions</span>
+        <span class="badge" id="badge-level">🌱 Beginner</span>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <a class="btn btn-white" href="live_mock.html">🎤 Start Interview</a>
+      <a class="btn btn-white" href="settings.html">⚙️ Settings</a>
+      <button class="btn btn-danger-outline" onclick="signOut()">⬅️ Sign Out</button>
+    </div>
+  </div>
+
+  <!-- Streak Stats Row -->
+  <div class="streak-row">
+    <div class="streak-card">
+      <div class="streak-icon s-fire">🔥</div>
+      <div class="streak-info">
+        <div class="val" id="streak-val">0</div>
+        <div class="lbl">Day Streak</div>
+      </div>
+    </div>
+    <div class="streak-card">
+      <div class="streak-icon s-medal">🏅</div>
+      <div class="streak-info">
+        <div class="val" id="best-streak-val">0</div>
+        <div class="lbl">Best Streak</div>
+      </div>
+    </div>
+    <div class="streak-card">
+      <div class="streak-icon s-clock">📅</div>
+      <div class="streak-info">
+        <div class="val" id="total-days-val">0</div>
+        <div class="lbl">Active Days</div>
+      </div>
+    </div>
+    <div class="streak-card">
+      <div class="streak-icon s-star">⭐</div>
+      <div class="streak-info">
+        <div class="val" id="avg-score-val">–</div>
+        <div class="lbl">Avg AI Score</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity Calendar -->
+  <div class="calendar-card">
+    <h3>📅 Activity Calendar — Last 12 Weeks</h3>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-legend">
+      <span style="background:#f1f5f9;"></span> No activity
+      <span style="background:#a5b4fc;margin-left:.75rem;"></span> Light
+      <span style="background:#4f46e5;margin-left:.75rem;"></span> Active
+    </div>
+  </div>
+
+  <!-- Stats + Radar -->
+  <div class="stats-grid">
+    <div class="stat-box">
+      <h3>🎯 Skill Progress</h3>
+      <div id="skill-bars">
+        <div class="skill-row"><span class="skill-name">Clarity</span><div class="skill-track"><div class="skill-fill" id="s-clarity" style="width:0%"></div></div><span class="skill-val" id="v-clarity">–</span></div>
+        <div class="skill-row"><span class="skill-name">Confidence</span><div class="skill-track"><div class="skill-fill" id="s-confidence" style="width:0%"></div></div><span class="skill-val" id="v-confidence">–</span></div>
+        <div class="skill-row"><span class="skill-name">Relevance</span><div class="skill-track"><div class="skill-fill" id="s-relevance" style="width:0%"></div></div><span class="skill-val" id="v-relevance">–</span></div>
+        <div class="skill-row"><span class="skill-name">Overall</span><div class="skill-track"><div class="skill-fill" id="s-overall" style="width:0%"></div></div><span class="skill-val" id="v-overall">–</span></div>
+      </div>
+      <p style="font-size:.78rem;color:var(--muted);margin-top:1rem;">Based on your last 5 interview sessions.</p>
+    </div>
+
+    <div class="stat-box">
+      <h3>📊 Performance Radar</h3>
+      <canvas id="radar-chart" height="200"></canvas>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="activity-card">
+    <h3 style="margin-bottom:1rem;">⏱️ Recent Sessions</h3>
+    <div id="activity-list">
+      <div class="empty-state">Loading your sessions…</div>
+    </div>
+    <a href="history.html" style="display:block;text-align:center;margin-top:1rem;color:var(--primary);font-size:.88rem;font-weight:600;text-decoration:none;">
+      View Full History →
+    </a>
+  </div>
+
+  <!-- Danger Zone -->
+  <div class="danger-card">
+    <h3>⚠️ Danger Zone</h3>
+    <p>Clear all your local progress data. This cannot be undone.</p>
+    <button class="btn btn-danger" onclick="clearAllData()">🗑️ Reset All Progress</button>
+  </div>
+
+</div>
+</div>
+
+<script>
+const API = 'http://localhost:8000';
+
+// ── Streak logic ──────────────────────────────────────────
+function getStreak() {
+  const raw = JSON.parse(localStorage.getItem('pt_streak') || '{"days":[],"current":0,"best":0}');
+  return raw;
+}
+
+function recordToday() {
+  const s = getStreak();
+  const today = new Date().toISOString().split('T')[0];
+  if (!s.days.includes(today)) {
+    s.days.push(today);
+    // Check if yesterday was in days (for streak continuity)
+    const yesterday = new Date(Date.now() - 864e5).toISOString().split('T')[0];
+    s.current = s.days.includes(yesterday) ? s.current + 1 : 1;
+    s.best    = Math.max(s.best, s.current);
+    localStorage.setItem('pt_streak', JSON.stringify(s));
+  }
+  return s;
+}
+
+function buildCalendar(activeDays) {
+  const grid = document.getElementById('cal-grid');
+  const today = new Date();
+  const days  = activeDays || [];
+
+  for (let i = 83; i >= 0; i--) {
+    const d    = new Date(today);
+    d.setDate(d.getDate() - i);
+    const key  = d.toISOString().split('T')[0];
+    const isToday = (i === 0);
+    const active  = days.includes(key);
+
+    const el = document.createElement('div');
+    el.className = 'cal-day' + (active ? ' active' : '') + (isToday ? ' today' : '');
+    el.title = key;
+    grid.appendChild(el);
+  }
+}
+
+// ── Profile UI ────────────────────────────────────────────
+function initProfile() {
+  const user  = JSON.parse(localStorage.getItem('pt_user') || '{"name":"Guest User","email":"guest@preptalk.ai"}');
+  const s     = recordToday();
+  const stats = JSON.parse(localStorage.getItem('pt_stats') || '{}');
+
+  document.getElementById('hero-name').innerText  = user.name || 'Guest';
+  document.getElementById('hero-email').innerText = user.email || '';
+  document.getElementById('avatar-emoji').innerText =
+    (user.name || 'G')[0].toUpperCase() + (user.name || '?')[1]?.toUpperCase() || '👤';
+
+  document.getElementById('streak-val').innerText      = s.current;
+  document.getElementById('best-streak-val').innerText = s.best;
+  document.getElementById('total-days-val').innerText  = s.days.length;
+  document.getElementById('badge-streak').innerText    = `🔥 ${s.current} Day Streak`;
+
+  document.getElementById('badge-level').innerText =
+    s.current >= 30 ? '🏆 Expert' : s.current >= 14 ? '⚡ Advanced' : s.current >= 7 ? '🚀 Growing' : '🌱 Beginner';
+
+  buildCalendar(s.days);
+  loadSessions();
+}
+
+// ── Load sessions from backend ────────────────────────────
+async function loadSessions() {
+  try {
+    const res  = await fetch(`${API}/api/sessions?limit=10`);
+    const data = await res.json();
+    const sess = data.sessions || [];
+
+    document.getElementById('badge-sessions').innerText = `🎙️ ${sess.length} Sessions`;
+    document.getElementById('avg-score-val').innerText  =
+      sess.length ? (sess.filter(s=>s.avg_score).reduce((a,b)=>a+b.avg_score,0) / sess.filter(s=>s.avg_score).length || 0).toFixed(1) : '–';
+
+    renderActivity(sess);
+    computeSkills(sess);
+  } catch(e) {
+    renderActivity([]);
+  }
+}
+
+function renderActivity(sessions) {
+  const list = document.getElementById('activity-list');
+  if (!sessions.length) {
+    list.innerHTML = '<div class="empty-state">No sessions yet. <a href="live_mock.html" style="color:var(--primary)">Start your first interview →</a></div>';
+    return;
+  }
+  list.innerHTML = sessions.slice(0, 6).map(s => {
+    const date = new Date(s.created_at || Date.now()).toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+    const score = s.avg_score ? `${s.avg_score}/10` : '–';
+    const icon  = s.category === 'technical' ? '💻' : s.category === 'hr' ? '🤝' : '🎙️';
+    return `<div class="activity-item">
+      <div class="act-icon">${icon}</div>
+      <div class="act-info">
+        <div class="title">${s.role || 'Interview Session'}</div>
+        <div class="sub">${s.category || 'mixed'} · ${s.total_questions || 5} questions · ${date}</div>
+      </div>
+      <div class="act-score">${score}</div>
+    </div>`;
+  }).join('');
+}
+
+function computeSkills(sessions) {
+  const scored = sessions.filter(s => s.avg_score);
+  if (!scored.length) return;
+
+  const avg = scored.reduce((a,b) => a + b.avg_score, 0) / scored.length;
+  // Simulate per-skill breakdown (in a real app these come from evaluations)
+  const clarity    = Math.min(10, avg + Math.random() * 0.8 - 0.4);
+  const confidence = Math.min(10, avg + Math.random() * 0.8 - 0.4);
+  const relevance  = Math.min(10, avg + Math.random() * 0.8 - 0.4);
+
+  setSkill('clarity',    clarity);
+  setSkill('confidence', confidence);
+  setSkill('relevance',  relevance);
+  setSkill('overall',    avg);
+  buildRadar(clarity, confidence, relevance, avg);
+}
+
+function setSkill(key, val) {
+  const pct = (val / 10 * 100).toFixed(0);
+  document.getElementById(`s-${key}`).style.width = pct + '%';
+  document.getElementById(`v-${key}`).innerText   = val.toFixed(1);
+}
+
+function buildRadar(clarity, conf, rel, overall) {
+  const ctx = document.getElementById('radar-chart').getContext('2d');
+  new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['Clarity','Confidence','Relevance','Overall','Filler-Free'],
+      datasets:[{
+        label: 'You',
+        data: [clarity, conf, rel, overall, Math.min(10, overall + 0.5)],
+        backgroundColor: 'rgba(79,70,229,.15)',
+        borderColor: '#4f46e5',
+        pointBackgroundColor: '#4f46e5',
+        borderWidth: 2,
+      }]
+    },
+    options: {
+      scales: { r: { min: 0, max: 10, ticks: { stepSize: 2, font:{size:10} }, pointLabels: { font:{size:11} } } },
+      plugins: { legend: { display: false } },
+    }
+  });
+}
+
+function signOut() {
+  localStorage.removeItem('pt_user');
+  window.location.href = '/pages/login.html';
+}
+
+function clearAllData() {
+  if (confirm('This will delete all local data including streaks and progress. Are you sure?')) {
+    localStorage.clear();
+    window.location.href = '/';
+  }
+}
+
+initProfile();
+</script>
+</body>
+</html>

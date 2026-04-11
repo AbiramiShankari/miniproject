@@ -1,0 +1,67 @@
+{
+  "ATS": {
+    "resume_id": "b37bd769-9349-4433-a7bd-3638ba0ef001",
+    "ats_score": 0,
+    "keyword_score": 5,
+    "format_score": 70,
+    "experience_score": 60,
+    "present_keywords": [],
+    "missing_keywords": [
+      "skills",
+      "experience",
+      "education",
+      "projects",
+      "certifications"
+    ],
+    "strengths": [
+      "Resume provided for analysis"
+    ],
+    "improvements": [
+      "Add missing sections: skills, experience, education, projects, certifications"
+    ],
+    "overall_feedback": "Your resume scores 0/100 against the Python dev role. Enable Gemini for deeper analysis.",
+    "self_intro_draft": "I am a motivated professional seeking a Python dev role. My resume highlights relevant experience and skills. I am eager to contribute and grow with your organisation."
+  },
+  "COACH": {
+    "thread_id": "d3f85c1c-bdd4-464e-b436-f2d1e0b26d7d",
+    "reply": "I'm having trouble connecting right now. Please try again in a moment. (Error: 404 models/gemini-1.5-flash is not found for API version v1beta, or is not suppo)"
+  },
+  "SPEECH": {
+    "score": 5,
+    "clarity_score": 5,
+    "confidence_score": 4,
+    "relevance_score": 5,
+    "filler_word_count": 0,
+    "filler_words_found": [],
+    "overall_feedback": "Your answer is too brief \u2014 try to elaborate with examples.",
+    "strengths": [
+      "Attempted the question",
+      "Adequate vocabulary"
+    ],
+    "improvements": [
+      "Minimise hesitations",
+      "Add specific metrics or project outcomes",
+      "Structure with: Situation \u2192 Task \u2192 Action \u2192 Result"
+    ],
+    "ideal_answer_hint": "Lead with the context, describe your specific action, and end with a measurable result."
+  },
+  "COMM": {
+    "score": 5,
+    "clarity_score": 5,
+    "confidence_score": 4,
+    "relevance_score": 5,
+    "filler_word_count": 0,
+    "filler_words_found": [],
+    "overall_feedback": "Your answer is too brief \u2014 try to elaborate with examples.",
+    "strengths": [
+      "Attempted the question",
+      "Adequate vocabulary"
+    ],
+    "improvements": [
+      "Minimise hesitations",
+      "Add specific metrics or project outcomes",
+      "Structure with: Situation \u2192 Task \u2192 Action \u2192 Result"
+    ],
+    "ideal_answer_hint": "Lead with the context, describe your specific action, and end with a measurable result."
+  }
+}

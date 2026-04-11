@@ -3,202 +3,395 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Session Comparison</title>
-
+<title>PrepTalk – Compare Sessions</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
+:root{--primary:#4f46e5;--primary-light:#ede9fe;--success:#10b981;--warn:#f59e0b;--danger:#ef4444;--bg:#f8fafc;--card:#fff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+.pt-main{flex:1;overflow-y:auto;}
+.wrap{max-width:1100px;margin:0 auto;padding:2rem 2.5rem;}
 
-body {
-  background: #f5f6fa;
-}
+.page-header{margin-bottom:2rem;}
+.page-header h1{font-size:1.75rem;font-weight:800;margin-bottom:.3rem;}
+.page-header p{font-size:.88rem;color:var(--muted);}
 
-.container {
-  display: flex;
-}
+.btn{padding:.6rem 1.25rem;border:none;border-radius:10px;font-weight:700;font-size:.85rem;
+  cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:.35rem;}
+.btn-ghost{background:var(--card);color:var(--text);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--primary);color:var(--primary);}
 
-/* Sidebar */
-.sidebar {
-  width: 240px;
-  background: #fff;
-  height: 100vh;
-  padding: 20px;
-  border-right: 1px solid #ddd;
-}
+/* Picker (when no URL params) */
+.picker-row{display:flex;gap:1.5rem;margin-bottom:2rem;flex-wrap:wrap;}
+.picker-card{flex:1;min-width:280px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;}
+.picker-card h3{font-size:.9rem;font-weight:700;margin-bottom:.75rem;color:var(--muted);}
+.picker-card select{width:100%;padding:.7rem 1rem;border:1px solid var(--border);border-radius:10px;
+  font-family:'Inter',sans-serif;font-size:.92rem;outline:none;background:var(--bg);color:var(--text);}
+.picker-card select:focus{border-color:var(--primary);}
 
-.logo {
-  font-weight: bold;
-  margin-bottom: 20px;
-}
+/* Vs header */
+.vs-header{display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;margin-bottom:1.75rem;}
+.vs-badge{text-align:center;width:48px;height:48px;background:linear-gradient(135deg,var(--primary),#7c3aed);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;
+  font-weight:800;font-size:.95rem;flex-shrink:0;}
+.sess-header{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.sess-header.a{border-left:4px solid var(--primary);}
+.sess-header.b{border-left:4px solid var(--success);}
+.sh-role{font-size:1.05rem;font-weight:800;}
+.sh-meta{font-size:.8rem;color:var(--muted);margin-top:.3rem;}
+.sh-score{font-size:2rem;font-weight:900;margin-top:.5rem;}
+.sh-score.a{color:var(--primary);}
+.sh-score.b{color:var(--success);}
 
-.menu a {
-  display: block;
-  padding: 10px;
-  margin-bottom: 5px;
-  border-radius: 8px;
-  color: #444;
-  text-decoration: none;
-  cursor: pointer;
-}
+/* Compare sections */
+.section-title{font-size:1rem;font-weight:700;margin:1.75rem 0 1rem;}
 
-.menu a.active,
-.menu a:hover {
-  background: #e6e9ff;
-  color: #4a6cff;
-}
+/* Radar comparison */
+.radar-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.5rem;}
+.radar-card h3{font-size:1rem;font-weight:700;margin-bottom:1rem;}
 
-.section {
-  margin: 15px 0 5px;
-  font-size: 12px;
-  color: #888;
-}
+/* Metric grid */
+.metric-grid{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.5rem;}
+.metric-row{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;
+  display:grid;grid-template-columns:140px 1fr auto 1fr auto;gap:.75rem;align-items:center;}
+.metric-label{font-size:.85rem;font-weight:700;color:var(--muted);}
+.m-bar-wrap{height:10px;border-radius:99px;background:#f1f5f9;overflow:hidden;}
+.m-bar{height:100%;border-radius:99px;transition:width .8s ease;}
+.bar-a{background:var(--primary);}
+.bar-b{background:var(--success);}
+.m-val{font-size:.95rem;font-weight:800;min-width:36px;text-align:center;}
+.m-val.a-color{color:var(--primary);}
+.m-val.b-color{color:var(--success);}
+.winner-badge{font-size:.7rem;font-weight:700;padding:.2rem .5rem;border-radius:99px;margin-left:.25rem;}
+.w-a{background:rgba(79,70,229,.1);color:var(--primary);}
+.w-b{background:rgba(16,185,129,.1);color:var(--success);}
+.w-tie{background:#f1f5f9;color:var(--muted);}
 
-/* Main */
-.main {
-  flex: 1;
-  padding: 30px 40px;
-}
+/* Insights */
+.insights-row{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.5rem;}
+.insight-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
+.insight-card.a{border-top:3px solid var(--primary);}
+.insight-card.b{border-top:3px solid var(--success);}
+.insight-card h4{font-size:.88rem;font-weight:700;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem;}
+.insight-card li{list-style:none;font-size:.83rem;color:var(--muted);padding:.3rem 0;border-bottom:1px solid var(--border);}
+.insight-card li:last-child{border:none;}
+.insight-card li::before{content:"→ ";}
 
-/* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+/* Winner banner */
+.winner-banner{border-radius:14px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:center;}
+.winner-banner.a{background:rgba(79,70,229,.06);border:1px solid rgba(79,70,229,.2);}
+.winner-banner.b{background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.2);}
+.winner-banner.tie{background:#f8fafc;border:1px solid var(--border);}
+.wb-icon{font-size:2.5rem;}
+.wb-text h3{font-size:1rem;font-weight:800;margin-bottom:.2rem;}
+.wb-text p{font-size:.85rem;color:var(--muted);}
 
-.title h1 {
-  margin-bottom: 5px;
-}
-
-.title p {
-  color: #777;
-}
-
-.btn {
-  background: linear-gradient(90deg, #4a6cff, #7a4fff);
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.btn:hover {
-  opacity: 0.85;
-}
-
-/* Card */
-.card {
-  margin-top: 30px;
-  background: #fff;
-  padding: 60px 20px;
-  border-radius: 12px;
-  text-align: center;
-  border: 1px solid #eee;
-}
-
-.icon {
-  font-size: 40px;
-  margin-bottom: 15px;
-}
-
-.card h3 {
-  margin-bottom: 10px;
-}
-
-.card p {
-  color: #777;
-  margin-bottom: 20px;
+@media(max-width:760px){
+  .metric-row{grid-template-columns:1fr;}.vs-header{grid-template-columns:1fr;}.insights-row{grid-template-columns:1fr;}
 }
 </style>
 </head>
-
 <body>
+<script src="/static/js/nav.js"></script>
+<div class="pt-main">
+<div class="wrap">
 
-<div class="container">
+  <div class="page-header">
+    <h1>⚖️ Compare Sessions</h1>
+    <p>Side-by-side breakdown of two interview sessions. See what improved and what didn't.</p>
+  </div>
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <h2 class="logo">PREPTALK</h2>
-
-    <div class="menu">
-      <a>Text Interview</a>
-      <a>Voice Interview</a>
-      <a>Video Interview</a>
-      <a>AI Coach</a>
-
-      <p class="section">COMMUNICATION</p>
-      <a>Self Introduction</a>
-
-      <p class="section">PRACTICE</p>
-      <a>Aptitude</a>
-      <a>Company PYQs</a>
-
-      <p class="section">LEARNING</p>
-      <a>Learning Hub</a>
-      <a>AI Roadmap</a>
-      <a>Training Plan</a>
-      <a>Python</a>
-
-      <p class="section">ANALYTICS</p>
-      <a>Feedback</a>
-      <a>History</a>
-      <a class="active">Compare</a>
-
-      <p class="section">HELP</p>
-      <a>Documentation</a>
-      <a>Settings</a>
+  <!-- Session Pickers (shown when coming directly to this page) -->
+  <div class="picker-row" id="picker-row">
+    <div class="picker-card">
+      <h3>🔵 Session A</h3>
+      <select id="pick-a"><option value="">Loading sessions…</option></select>
     </div>
-  </aside>
+    <div class="picker-card">
+      <h3>🟢 Session B</h3>
+      <select id="pick-b"><option value="">Loading sessions…</option></select>
+    </div>
+  </div>
+  <div style="text-align:center;margin-bottom:2rem;" id="pick-btn-row">
+    <button class="btn" style="background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;padding:.75rem 2rem;"
+            onclick="loadFromPickers()">⚖️ Compare These Sessions</button>
+    <a class="btn btn-ghost" href="history.html" style="margin-left:.75rem;">← Back to History</a>
+  </div>
 
-  <!-- Main -->
-  <main class="main">
+  <!-- Compare content -->
+  <div id="compare-content" style="display:none;">
 
-    <!-- Header -->
-    <div class="header">
-      <div class="title">
-        <h1>Session Comparison</h1>
-        <p>Track how your scores improved across interviews</p>
+    <!-- VS Header -->
+    <div class="vs-header">
+      <div class="sess-header a" id="sh-a">
+        <div class="sh-role" id="sha-role">Session A</div>
+        <div class="sh-meta" id="sha-meta"></div>
+        <div class="sh-score a" id="sha-score">–</div>
       </div>
-
-      <button class="btn" onclick="newInterview()">New Interview →</button>
+      <div style="display:flex;justify-content:center;"><div class="vs-badge">VS</div></div>
+      <div class="sess-header b" id="sh-b">
+        <div class="sh-role" id="shb-role">Session B</div>
+        <div class="sh-meta" id="shb-meta"></div>
+        <div class="sh-score b" id="shb-score">–</div>
+      </div>
     </div>
 
-    <!-- Empty State -->
-    <div class="card">
-      <div class="icon">📊</div>
-      <h3>Need more data</h3>
-      <p>Complete at least 2 scored interviews to see comparisons.</p>
-      <button class="btn" onclick="startInterview()">Start Interview</button>
+    <!-- Winner banner -->
+    <div class="winner-banner" id="winner-banner">
+      <div class="wb-icon" id="wb-icon">🏆</div>
+      <div class="wb-text">
+        <h3 id="wb-title">Comparing…</h3>
+        <p id="wb-sub"></p>
+      </div>
     </div>
 
-  </main>
+    <!-- Radar overlay -->
+    <div class="radar-card">
+      <h3>🕸️ Performance Radar Overlay</h3>
+      <canvas id="radar-chart" height="120"></canvas>
+    </div>
 
+    <!-- Metric-by-metric comparison -->
+    <div class="section-title">📊 Metric Breakdown</div>
+    <div class="metric-grid" id="metric-grid"></div>
+
+    <!-- Insights cards -->
+    <div class="section-title">💡 Session Insights</div>
+    <div class="insights-row">
+      <div class="insight-card a">
+        <h4><span style="background:var(--primary-light);color:var(--primary);padding:.2rem .5rem;border-radius:6px;font-size:.75rem;">A</span> Strengths</h4>
+        <ul id="ins-a-str"><li>No data</li></ul>
+      </div>
+      <div class="insight-card b">
+        <h4><span style="background:#f0fdf4;color:var(--success);padding:.2rem .5rem;border-radius:6px;font-size:.75rem;">B</span> Strengths</h4>
+        <ul id="ins-b-str"><li>No data</li></ul>
+      </div>
+    </div>
+
+  </div><!-- /compare-content -->
+
+</div>
 </div>
 
 <script>
-// Sidebar active toggle
-document.querySelectorAll(".menu a").forEach(item => {
-  item.addEventListener("click", () => {
-    document.querySelectorAll(".menu a").forEach(el => el.classList.remove("active"));
-    item.classList.add("active");
+const API = 'http://localhost:8000';
+let sessionA = null;
+let sessionB = null;
+let allSessions = [];
+
+async function init() {
+  // Load all sessions for pickers
+  try {
+    const res = await fetch(`${API}/api/sessions?limit=50`);
+    const data = await res.json();
+    allSessions = data.sessions || getSampleSessions();
+  } catch(e) {
+    allSessions = getSampleSessions();
+  }
+
+  populatePickers();
+
+  // Check URL params
+  const params = new URLSearchParams(window.location.search);
+  const idA = params.get('a');
+  const idB = params.get('b');
+
+  if (idA && idB) {
+    // Pre-select and compare immediately
+    document.getElementById('pick-a').value = idA;
+    document.getElementById('pick-b').value = idB;
+    await loadFromPickers();
+  }
+}
+
+function getSampleSessions() {
+  const roles = ['Software Engineer','Full Stack Developer','Data Scientist','ML Engineer'];
+  const cats  = ['technical','hr','mixed','behavioral'];
+  return Array.from({length: 8}, (_, i) => ({
+    session_id:     `demo_${i}`,
+    role:           roles[i % 4],
+    category:       cats[i % 4],
+    status:         'completed',
+    avg_score:      Math.round((5 + Math.random() * 4) * 10) / 10,
+    total_questions: 5 + (i % 3),
+    created_at:     new Date(Date.now() - i * 2 * 864e5).toISOString(),
+    difficulty:     ['fresher','intermediate'][i % 2],
+    clarity_avg:    Math.round((5 + Math.random() * 4) * 10) / 10,
+    confidence_avg: Math.round((5 + Math.random() * 4) * 10) / 10,
+    relevance_avg:  Math.round((5 + Math.random() * 4) * 10) / 10,
+  }));
+}
+
+function populatePickers() {
+  const opts = allSessions.map((s, i) => {
+    const date = new Date(s.created_at||Date.now()).toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+    return `<option value="${s.session_id}">${i+1}. ${s.role} — ${s.category} (${date})</option>`;
+  }).join('');
+
+  document.getElementById('pick-a').innerHTML = opts;
+  document.getElementById('pick-b').innerHTML = opts;
+  // Default to first two
+  if (allSessions.length > 1) {
+    document.getElementById('pick-a').value = allSessions[0].session_id;
+    document.getElementById('pick-b').value = allSessions[1].session_id;
+  }
+}
+
+async function loadFromPickers() {
+  const idA = document.getElementById('pick-a').value;
+  const idB = document.getElementById('pick-b').value;
+
+  if (!idA || !idB || idA === idB) {
+    alert('Please select two different sessions to compare.');
+    return;
+  }
+
+  // Try to fetch full sessions; fall back to allSessions list
+  sessionA = await fetchSession(idA);
+  sessionB = await fetchSession(idB);
+
+  document.getElementById('compare-content').style.display = 'block';
+  document.getElementById('compare-content').scrollIntoView({behavior:'smooth'});
+
+  renderComparison();
+}
+
+async function fetchSession(id) {
+  // Try backend first
+  try {
+    const res = await fetch(`${API}/api/sessions/${id}`);
+    const data = await res.json();
+    if (data.session) return decorateWithEvals(data.session, data.evaluations || []);
+  } catch(e) {}
+  // Fallback to loaded list
+  const s = allSessions.find(x => x.session_id === id) || {};
+  return ensureScores(s);
+}
+
+function decorateWithEvals(session, evals) {
+  if (!evals.length) return ensureScores(session);
+  const avg = f => evals.filter(e=>e[f]).reduce((a,b)=>a+b[f],0) / evals.filter(e=>e[f]).length;
+  session.clarity_avg    = avg('clarity_score');
+  session.confidence_avg = avg('confidence_score');
+  session.relevance_avg  = avg('relevance_score');
+  session.strengths_all  = evals.flatMap(e=>e.strengths||[]).slice(0,3);
+  return session;
+}
+
+function ensureScores(s) {
+  s.clarity_avg    = s.clarity_avg    || s.avg_score || 6;
+  s.confidence_avg = s.confidence_avg || s.avg_score || 6;
+  s.relevance_avg  = s.relevance_avg  || s.avg_score || 6;
+  return s;
+}
+
+function renderComparison() {
+  const a = sessionA, b = sessionB;
+  const fmt = d => new Date(d||Date.now()).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+
+  // Headers
+  document.getElementById('sha-role').innerText  = a.role       || 'Session A';
+  document.getElementById('sha-meta').innerText  = `${a.category||'mixed'} · ${a.total_questions||5}Q · ${fmt(a.created_at)}`;
+  document.getElementById('sha-score').innerText = a.avg_score ? a.avg_score.toFixed(1)+'/10' : '–';
+  document.getElementById('shb-role').innerText  = b.role       || 'Session B';
+  document.getElementById('shb-meta').innerText  = `${b.category||'mixed'} · ${b.total_questions||5}Q · ${fmt(b.created_at)}`;
+  document.getElementById('shb-score').innerText = b.avg_score ? b.avg_score.toFixed(1)+'/10' : '–';
+
+  // Winner
+  const scoreA = a.avg_score || 0;
+  const scoreB = b.avg_score || 0;
+  const banner = document.getElementById('winner-banner');
+  if (scoreA > scoreB) {
+    banner.className = 'winner-banner a';
+    document.getElementById('wb-icon').innerText = '🏆';
+    document.getElementById('wb-title').innerText = 'Session A wins!';
+    document.getElementById('wb-sub').innerText   = `Session A scored ${(scoreA - scoreB).toFixed(1)} points higher. Great improvement!`;
+  } else if (scoreB > scoreA) {
+    banner.className = 'winner-banner b';
+    document.getElementById('wb-icon').innerText = '🏆';
+    document.getElementById('wb-title').innerText = 'Session B wins!';
+    document.getElementById('wb-sub').innerText   = `Session B scored ${(scoreB - scoreA).toFixed(1)} points higher. You're improving!`;
+  } else {
+    banner.className = 'winner-banner tie';
+    document.getElementById('wb-icon').innerText = '🤝';
+    document.getElementById('wb-title').innerText = 'It\'s a tie!';
+    document.getElementById('wb-sub').innerText   = 'Both sessions performed equally. Focus on the detail metrics to find areas to improve.';
+  }
+
+  // Radar
+  buildRadar(a, b);
+
+  // Metrics
+  buildMetrics(a, b);
+
+  // Insights
+  document.getElementById('ins-a-str').innerHTML =
+    (a.strengths_all || ['Strong attempt','Clear structure']).map(s => `<li>${s}</li>`).join('');
+  document.getElementById('ins-b-str').innerHTML =
+    (b.strengths_all || ['Good communication','Relevant answers']).map(s => `<li>${s}</li>`).join('');
+}
+
+function buildRadar(a, b) {
+  const ctx = document.getElementById('radar-chart').getContext('2d');
+  new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['Overall','Clarity','Confidence','Relevance'],
+      datasets: [
+        {
+          label: `A: ${a.role||'Session A'}`,
+          data: [a.avg_score||0, a.clarity_avg||0, a.confidence_avg||0, a.relevance_avg||0],
+          backgroundColor: 'rgba(79,70,229,.15)',
+          borderColor: '#4f46e5',
+          pointBackgroundColor: '#4f46e5',
+          borderWidth: 2,
+        },
+        {
+          label: `B: ${b.role||'Session B'}`,
+          data: [b.avg_score||0, b.clarity_avg||0, b.confidence_avg||0, b.relevance_avg||0],
+          backgroundColor: 'rgba(16,185,129,.12)',
+          borderColor: '#10b981',
+          pointBackgroundColor: '#10b981',
+          borderWidth: 2,
+        }
+      ]
+    },
+    options: {
+      scales: { r: { min:0, max:10, ticks:{stepSize:2,font:{size:10}}, pointLabels:{font:{size:12}} } },
+      plugins: { legend: { position:'top', labels:{font:{size:12}} } }
+    }
   });
-});
-
-// Buttons
-function newInterview() {
-  alert("Redirecting to new interview setup...");
 }
 
-function startInterview() {
-  alert("Starting interview...");
+function buildMetrics(a, b) {
+  const metrics = [
+    { label:'Overall Score',  vA: a.avg_score||0,    vB: b.avg_score||0    },
+    { label:'Clarity',        vA: a.clarity_avg||0,  vB: b.clarity_avg||0  },
+    { label:'Confidence',     vA: a.confidence_avg||0, vB: b.confidence_avg||0 },
+    { label:'Relevance',      vA: a.relevance_avg||0,  vB: b.relevance_avg||0  },
+    { label:'Questions Done', vA: a.total_questions||0, vB: b.total_questions||0, max:10 },
+  ];
+
+  document.getElementById('metric-grid').innerHTML = metrics.map(m => {
+    const max    = m.max || 10;
+    const wA     = ((m.vA / max) * 100).toFixed(0);
+    const wB     = ((m.vB / max) * 100).toFixed(0);
+    const winner = m.vA > m.vB ? 'a' : m.vB > m.vA ? 'b' : 'tie';
+    const badge  = winner === 'a' ? '<span class="winner-badge w-a">A ↑</span>' :
+                   winner === 'b' ? '<span class="winner-badge w-b">B ↑</span>' :
+                                    '<span class="winner-badge w-tie">Tie</span>';
+    return `<div class="metric-row">
+      <div class="metric-label">${m.label} ${badge}</div>
+      <div class="m-bar-wrap"><div class="m-bar bar-a" style="width:${wA}%"></div></div>
+      <div class="m-val a-color">${m.vA.toFixed ? m.vA.toFixed(1) : m.vA}</div>
+      <div class="m-bar-wrap"><div class="m-bar bar-b" style="width:${wB}%"></div></div>
+      <div class="m-val b-color">${m.vB.toFixed ? m.vB.toFixed(1) : m.vB}</div>
+    </div>`;
+  }).join('');
 }
+
+init();
 </script>
-
 </body>
 </html>

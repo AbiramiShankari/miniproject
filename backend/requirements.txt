@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+motor
+pymongo
+firecrawl-py
+python-dotenv
+pydantic[email]
+google-generativeai
+python-multipart
+aiofiles
